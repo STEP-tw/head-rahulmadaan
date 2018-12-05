@@ -5,16 +5,7 @@ const extractUsefulContent = function(content,type='1',limit=10) {
   return content.split('').slice(0,limit).join('');
 }
 const makeHeader = function(head) {
-  return "==>"+head+"<==";
-};
-
-const classifyParameters = function(inputs=[]) {
-  let fileNames = [];
-  let otherParameters = [];
-  if(!inputs[0].includes('-') && inputs.length >1) {return [];}
-  otherParameters = inputs.slice(0,1)
-  fileNames = inputs.slice(1);
-  return [otherParameters,fileNames];
+  return "==> "+head+" <==";
 };
 
 const extractNumberOfLines = function(inputParameters) {
@@ -30,20 +21,16 @@ const extractNumberOfLines = function(inputParameters) {
 const getFileNames = (x=>x.filter(file => file.includes('.')));
 const getTypeAndLength = (x=>x.filter(file => !file.includes('.')));
 
-const getType = function(userInput) {
- let type = getTypeAndLength(userInput);
-  if(type === []) {
-    return 1;
-  }
-  return 0
-}
-
-const extactFileNames = function(userInput) {
-  return classifyParameters(userInput)[0];
-}
 const extractType = function(input) {
   input = input.join('');
   if(input.includes('-c')) { return '0';}
   return 1;
 }
-module.exports={getType,extractUsefulContent , classifyParameters,extractNumberOfLines,extactFileNames,extractType,makeHeader,extractUsefulContent,getFileNames,getTypeAndLength};
+module.exports={
+  extractUsefulContent,
+  extractNumberOfLines,
+  extractType,
+  makeHeader,
+  getFileNames,
+  getTypeAndLength
+};

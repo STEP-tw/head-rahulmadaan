@@ -1,11 +1,11 @@
-const {classifyParameters,
+const {
   extractUsefulContent,
   makeHeader,
   extractNumberOfLines,
   extractType,
   getFileNames,
   getTypeAndLength,
-  getType} = require('./src/library.js');
+  } = require('./src/library.js');
 const fs = require('fs');
 
 const head = function(input) {
