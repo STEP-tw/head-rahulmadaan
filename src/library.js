@@ -18,21 +18,32 @@ const classifyParameters = function(inputs=[]) {
 };
 
 const extractNumberOfLines = function(inputParameters) {
-  let input = 0;
-  inputParameters = inputParameters.join('');
-  let index=1;
-  while(!parseInt(inputParameters)) {
-    inputParameters = inputParameters.slice(index);
-    input = inputParameters;
+  let string = inputParameters.join('');
+  let index=0;
+  while(!parseInt(string) && index < inputParameters.join('').length) {
+    index++;
+    string = inputParameters.join('');
+    string = string.slice(index);
   }
-  return Math.abs(input);
+  return Math.abs(parseInt(string)) || 10;
 }
+const getFileNames = (x=>x.filter(file => file.includes('.')));
+const getTypeAndLength = (x=>x.filter(file => !file.includes('.')));
+
+const getType = function(userInput) {
+ let type = getTypeAndLength(userInput);
+  if(type === []) {
+    return 1;
+  }
+  return 0
+}
+
 const extactFileNames = function(userInput) {
   return classifyParameters(userInput)[0];
 }
 const extractType = function(input) {
   input = input.join('');
-  if(input.includes('-n')) { return '1';}
-  return 0;
+  if(input.includes('-c')) { return '0';}
+  return 1;
 }
-module.exports={extractUsefulContent , classifyParameters,extractNumberOfLines,extactFileNames,extractType,makeHeader,extractUsefulContent};
+module.exports={getType,extractUsefulContent , classifyParameters,extractNumberOfLines,extactFileNames,extractType,makeHeader,extractUsefulContent,getFileNames,getTypeAndLength};

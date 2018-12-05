@@ -1,19 +1,27 @@
-const {classifyParameters,extractUsefulContent,makeHeader,extractNumberOfLines,extractType} = require('./src/library.js');
+const {classifyParameters,
+  extractUsefulContent,
+  makeHeader,
+  extractNumberOfLines,
+  extractType,
+  getFileNames,
+  getTypeAndLength,
+  getType} = require('./src/library.js');
 const fs = require('fs');
 
 const head = function(input) {
-  let content = '';
-  let delimiter = ''
-  input =  classifyParameters(input)
-  extractNumber = extractNumberOfLines(input[0]);
-  fileNames = input[1];
-  type = extractType(input[0]);
+  let content = [];
+  let delimiter = '';
 
-  for(let count=0; count<fileNames.length; count++) {
-    if(fileNames.length > 1) {content += delimiter; content += makeHeader(fileNames[count]); content += '\n';}
-    content += extractUsefulContent(fs.readFileSync(fileNames[count],'utf8'),type,extractNumber);
-    delimiter = '\n';
+  file = getFileNames(input);
+  extractNumber = extractNumberOfLines(getTypeAndLength(input));
+  let type = extractType(getTypeAndLength(input));
+
+  for(let count=0; count<file.length; count++) {
+    if(file.length > 1) {
+      console.log(delimiter + makeHeader(file[count]));
+      delimiter = '\n'
+    }
+    console.log(extractUsefulContent(fs.readFileSync(file[count],'utf8'),type,extractNumber));
   }
-  console.log(content);
 }
 head(process.argv.slice(2));
