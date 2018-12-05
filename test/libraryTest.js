@@ -1,5 +1,6 @@
-let {makeHeader , extractNumberOfLines} = require('../src/library.js');
+let {makeHeader,getFileNames, extractNumberOfLines} = require('../src/library.js');
 let assert = require('assert');
+
 describe('makeHeader', function(){
 
   it('should create a head line using a file name', function(){
@@ -33,14 +34,14 @@ describe('extractNumberOfLines', function(){
     assert.equal(extractNumberOfLines(['./head.js','c','12']),12);
   });
 });
-describe('makeHeader', () => {
-  it('should return heading with two spaces if empty title(empty string) is given', () => {
-    assert.equal(makeHeader(''),"==>  <==");
+describe('getFileNames',function(){
+  it('should return no filename if no input is given',function(){
+    assert.deepEqual(getFileNames([]),[]);
   });
-
-  it('should return heading to given title', () => {
-    assert.equal(makeHeader('abc'),"==> abc <==");
-    assert.equal(makeHeader('file1'),"==> file1 <==");
+  it('should return filename if only one filename is given',function(){
+    assert.deepEqual(getFileNames(['demo.txt']),['demo.txt']);
+  });
+  it('should return filenames from a number of parameters',function(){
+    assert.deepEqual(getFileNames(['-n1','test.txt','log.txt']),['test.txt','log.txt']);
   });
 });
-

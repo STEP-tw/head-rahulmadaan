@@ -19,7 +19,7 @@ const extractNumberOfLines = function(inputParameters) {
   }
   return Math.abs(parseInt(string)) || 10;
 }
-const getFileNames = (x=>x.filter(file => file.includes('.')));
+const getFileNames = (x=>x.filter(file => file.includes('.') || file.includes('_')));
 const getTypeAndLength = (x=>x.filter(file => !file.includes('.')));
 
 const extractType = function(input) {
@@ -27,19 +27,23 @@ const extractType = function(input) {
   if(input.includes('-c')) { return '0';}
   return 1;
 }
-
-const head = function(userInput,fs) {
-  let data = [];
-
+const classifyInput = function(userInput) {
   let file = getFileNames(userInput);
   let extractNumber = extractNumberOfLines(getTypeAndLength(userInput));
   let type = extractType(getTypeAndLength(userInput));
+  return {file: file,extractNumber : extractNumber,type : type};
+}
+
+const head = function(userInput,fs) {
+  let data = [];
+  let {file,extractNumber,type} = classifyInput(userInput);
+
   for(let count=0; count<file.length; count++) {
     if(file.length > 1) {
       data.push(delimiter + makeHeader(file[count]));
       delimiter = '\n'
     }
-    let text = (fs.readFileSync(file[count],'utf8'));
+    let text = (fs(file[count],'utf8'));
     data.push(extractUsefulContent(text,type,extractNumber));
   }
   return data.join('\n');
