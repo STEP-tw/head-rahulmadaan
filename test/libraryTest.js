@@ -32,5 +32,15 @@ describe('extractNumberOfLines', function(){
     assert.equal(extractNumberOfLines(['-n1','-c2']),1);
     assert.equal(extractNumberOfLines(['./head.js','c','12']),12);
   });
-
 });
+describe('makeHeader', () => {
+  it('should return heading with two spaces if empty title(empty string) is given', () => {
+    assert.equal(makeHeader(''),"==>  <==");
+  });
+
+  it('should return heading to given title', () => {
+    assert.equal(makeHeader('abc'),"==> abc <==");
+    assert.equal(makeHeader('file1'),"==> file1 <==");
+  });
+});
+
