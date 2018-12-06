@@ -1,4 +1,4 @@
-let {makeHeader,getFileNames, extractNumber,getLines,getCharacters} = require('../src/library.js');
+let {makeHeader,getFileNames,getTypeAndLength, extractNumber,getLines,getCharacters} = require('../src/library.js');
 let assert = require('assert');
 
 describe('makeHeader', function(){
@@ -81,5 +81,15 @@ describe("getCharacters",function() {
   });
   it('should return empty string for no input',function(){
     assert.deepEqual(getCharacters("abc", ), "" );
+  });
+});
+describe('getTypeAndLength',function(){
+  it('should return empty string with no input',function(){
+    assert.equal(getTypeAndLength(['']),'');
+  });
+  it('should return type and length if no other argument is given',function(){
+    assert.deepEqual(getTypeAndLength(['']),['']);
+    assert.deepEqual(getTypeAndLength(['-n2','demo.js']),['-n2']);
+    assert.deepEqual(getTypeAndLength(['-c1','demo.js','test.txt']),['-c1']);
   });
 });

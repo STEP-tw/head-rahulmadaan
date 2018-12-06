@@ -49,19 +49,21 @@ const classifyInput = function(userInput) {
   return {file:file, extractNumber:limit, type:type};
 }
 
-const head = function(userInput,fs) {
+const head = function(userInput=[],fs) {
   let data = [];
   let delimiter = '';
   let text = '';
   let {file,extractNumber,type} = classifyInput(userInput);
   for(let count=0; count<file.length; count++) {
-    if(!fs.existsSync(file[count])) {  data.push('head: '+ file[count]+': No such file or directory'); count++; }
+    if(!fs.existsSync(file[count])) {
+      data.push('head: '+ file[count]+': No such file or directory'); count++; 
+    }
     if(count == file.length) {  return data.join('\n');  }
     if(file.length > 1) {
       data.push(delimiter + makeHeader(file[count]));
       delimiter = '\n'
     }
-    text += (fs.readFileSync(file[count],'utf8'));
+    text = (fs.readFileSync(file[count],'utf8'));
     data.push(extractUsefulContent(text,type,extractNumber));
   }
   return data.join('\n');
