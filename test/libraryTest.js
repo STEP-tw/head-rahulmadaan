@@ -24,9 +24,13 @@ describe('extractNumber', function(){
     assert.equal(extractNumber(['./head.js','-c5']),5);
   });
 
-  it('should return 10 when input have no integer', function(){
-    assert.equal(''+extractNumber(['-n','-c']),10);
-    assert.equal(''+extractNumber(['./head.js','-c']),10);
+  it('should return 10 when input have no integer and type is n', function(){
+    assert.equal(extractNumber(['-n']),10);
+  });
+
+  it('should return 0 when input have no integer and type is c', function(){
+    assert.equal(extractNumber(['-c']),0);
+    assert.equal(extractNumber(['./head.js','-c']),0);
   });
 
   it('should return first integer when input have more then one integer', function(){

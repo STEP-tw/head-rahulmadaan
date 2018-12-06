@@ -19,6 +19,12 @@ const makeHeader = function(head) {
 
 const extractNumber = function(inputParameters) {
   let string = inputParameters.join('');
+  if(string.includes('-c') && !string.match(/[0-9]/)) {
+    return 0; 
+  }
+  if(string.match(/[0]/) && !string.includes(/[1-9]/)) {
+    return 0; 
+  }
   let index=0;
   while(!parseInt(string) && index < inputParameters.join('').length) {
     index++;
@@ -27,6 +33,7 @@ const extractNumber = function(inputParameters) {
   }
   return Math.abs(parseInt(string)) || 10;
 }
+
 const getFileNames = (x=>x.filter(file => file.includes('.') || file.includes('_')));
 const getTypeAndLength = (x=>x.filter(file => !file.includes('.')));
 
@@ -44,6 +51,7 @@ const classifyInput = function(userInput) {
 
 const head = function(userInput,fs) {
   let data = [];
+  let delimiter = '';
   let {file,extractNumber,type} = classifyInput(userInput);
 
   for(let count=0; count<file.length; count++) {
