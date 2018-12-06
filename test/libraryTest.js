@@ -1,4 +1,4 @@
-let {makeHeader,getFileNames, extractNumberOfLines} = require('../src/library.js');
+let {makeHeader,getFileNames, extractNumber,getLines,getCharacters} = require('../src/library.js');
 let assert = require('assert');
 
 describe('makeHeader', function(){
@@ -17,23 +17,24 @@ describe('makeHeader', function(){
   });
 
 });
-describe('extractNumberOfLines', function(){
+describe('extractNumber', function(){
 
   it('should return the integer from input', function(){
-    assert.equal(extractNumberOfLines(['-n1']),1);
-    assert.equal(extractNumberOfLines(['./head.js','-c5']),5);
+    assert.equal(extractNumber(['-n1']),1);
+    assert.equal(extractNumber(['./head.js','-c5']),5);
   });
 
   it('should return 10 when input have no integer', function(){
-    assert.equal(''+extractNumberOfLines(['-n','-c']),10);
-    assert.equal(''+extractNumberOfLines(['./head.js','-c']),10);
+    assert.equal(''+extractNumber(['-n','-c']),10);
+    assert.equal(''+extractNumber(['./head.js','-c']),10);
   });
 
   it('should return first integer when input have more then one integer', function(){
-    assert.equal(extractNumberOfLines(['-n1','-c2']),1);
-    assert.equal(extractNumberOfLines(['./head.js','c','12']),12);
+    assert.equal(extractNumber(['-n1','-c2']),1);
+    assert.equal(extractNumber(['./head.js','c','12']),12);
   });
 });
+
 describe('getFileNames',function(){
   it('should return no filename if no input is given',function(){
     assert.deepEqual(getFileNames([]),[]);
@@ -43,5 +44,38 @@ describe('getFileNames',function(){
   });
   it('should return filenames from a number of parameters',function(){
     assert.deepEqual(getFileNames(['-n1','test.txt','log.txt']),['test.txt','log.txt']);
+  });
+});
+
+describe("getLines",function() {
+  it("should work for no line",function() {
+    assert.deepEqual(getLines('',0), '' );
+  });
+  it('should return empty string with no input',function(){
+    assert.deepEqual(getLines('',),'');
+  });
+  it("should work for single line",function() {
+    assert.deepEqual( getLines('a',1), 'a' );
+  });
+  it("should work for multiple lines",function() {
+    assert.deepEqual( getLines('a\nb\nc',2), 'a\nb' );
+  });
+  it("should work for less no of lines with more requirement of no of lines",function() {
+    assert.deepEqual( getLines('a\nb\nc',5), 'a\nb\nc' );
+  });
+});
+describe("getCharacters",function() {
+  it("should work for single line",function() {
+    assert.deepEqual( getCharacters("abc",2), "ab" );
+  });
+  it("should work for multiple lines",function() {
+    assert.deepEqual( getCharacters("abc\nabc",2 ), "ab" );
+    assert.deepEqual( getCharacters("abc\nabc",5 ), "abc\na" );
+  });
+  it("should return empty string for zero character requirement",function() {
+    assert.deepEqual(getCharacters("abc",0), "" );
+  });
+  it('should return empty string for no input',function(){
+    assert.deepEqual(getCharacters("abc", ), "" );
   });
 });
