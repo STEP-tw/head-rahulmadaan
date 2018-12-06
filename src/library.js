@@ -22,7 +22,7 @@ const extractNumber = function(inputParameters) {
   if(string.includes('-c') && !string.match(/[0-9]/)) {
     return 0; 
   }
-  if(string.match(/[0]/) && !string.includes(/[1-9]/)) {
+  if(string.match(/[0]/) && !string.match(/[1-9]/)) {
     return 0; 
   }
   let index=0;
