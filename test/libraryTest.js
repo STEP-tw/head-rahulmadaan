@@ -1,4 +1,11 @@
-let {makeHeader,getFileNames,getTypeAndLength, extractNumber,getLines,getCharacters} = require('../src/library.js');
+let { makeHeader,
+  head,
+  getFileNames,
+  getTypeAndLength,
+  extractNumber,
+  getLines,
+  getCharacters
+} = require('../src/library.js');
 let assert = require('assert');
 
 describe('makeHeader', function(){
@@ -22,10 +29,6 @@ describe('extractNumber', function(){
   it('should return the integer from input', function(){
     assert.equal(extractNumber(['-n1']),1);
     assert.equal(extractNumber(['./head.js','-c5']),5);
-  });
-
-  it('should return 10 when input have no integer and type is n', function(){
-    assert.equal(extractNumber(['-n']),10);
   });
 
   it('should return 0 when input have no integer and type is c', function(){
@@ -92,4 +95,80 @@ describe('getTypeAndLength',function(){
     assert.deepEqual(getTypeAndLength(['-n2','demo.js']),['-n2']);
     assert.deepEqual(getTypeAndLength(['-c1','demo.js','test.txt']),['-c1']);
   });
+});
+
+//==========================Functions necessary for testing head function(STARTS HERE)======================================
+const generateContent = function(length) {
+  let content = [];
+  for(let count=1; count<=length; count++) {
+    content.push(count);
+  }
+  return content;
+}
+const generateLines = function(numberOfLines) {
+  return generateContent(numberOfLines).join('\n');
+}
+const generateChars = function(numberOfChars) {
+  return generateContent(numberOfChars).join('');
+}
+const createHeader = function(head) {
+  return "==> "+head+" <==";
+}
+const joinFiles = function(file1,file2) {
+  let content = [];
+  content.push(createHeader(file1));
+  content.push(file1);
+  content.push('\n');
+  content.push(createHeader(file2));
+  content.push(file2);
+  return content.join('\n');
+}
+const fs = {};
+files = {
+  "fiveLines.txt" : generateLines(5),
+  "tenLines.txt" : generateLines(10),
+  "fifteenLines.txt" : generateLines(15),
+  "noLines.txt" : generateLines(0),
+}
+joins = {
+  "twoFilesWithLines" : joinFiles(files["tenLines.txt"],files["tenLines.txt"])
+}
+
+fs.readFileSync = function(path,encoding){
+  if(encoding!='utf8') return;
+  const content = files[path];
+  if(content == undefined) return "no such file " + path;
+  return content;
+};
+
+fs.existsSync = function(path){
+  if(files[path]==undefined) return false;
+  return true;
+}
+//==========================Functions necessary for testing head function(ENDS HERE)================================
+
+describe("head",()=>{
+  describe('empty file as input',function(){
+    it('should return no content if empty file is given in input',function(){
+      assert.equal(head(["noLines.txt"],fs),'');
+    });
+  });
+  describe('for 10 lines as output',function(){
+    it('should return 10 lines if only filename is given',function(){
+      assert.equal(head(['fifteenLines.txt'],fs),files["tenLines.txt"]);
+    });
+    it('should return 10 lines if only dash is given',function(){
+      assert.equal(head(['--','fifteenLines.txt'],fs),files["tenLines.txt"]);
+    });
+  });
+
+  describe('for 5 lines as outupt',function(){
+    it('should return 5 lines if type is n and option is 5 as input',function(){
+      assert.equal(head(['-n5','fifteenLines.txt'],fs),files["fiveLines.txt"]);
+    });
+    it("should return 5 lines if only value is given with a '-'",function(){
+      assert.equal(head(['--','fifteenLines.txt'],fs),files["tenLines.txt"]);
+    });
+  });
+
 });
