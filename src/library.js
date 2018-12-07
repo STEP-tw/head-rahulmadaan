@@ -61,7 +61,6 @@ const extractType = function(input) {
   if (input.includes("-c")) {
     return "0";
   }
-//  if (!input.includes("-n") && !input.includes("-c")) { return 2; }
   return 1;
 };
 const classifyInput = function(userInput) {
@@ -77,9 +76,13 @@ const head = function(userInput = [], fs) {
   let text = "";
   let { file, extractNumber, type } = classifyInput(userInput);
   let wrongValue = findWronglVal(getTypeAndLength(userInput));
-  if (wrongValue) {
+  if (wrongValue && type == '1') {
     return "head: illegal line count -- " + wrongValue;
   }
+  if (wrongValue && type == '0') {
+    return "head: illegal byte count -- " + wrongValue;
+  }
+
   let error = checkErrors(file, type,userInput);
   if (error) {
     return error;
