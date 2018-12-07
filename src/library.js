@@ -16,7 +16,6 @@ const getCharacters = function(content,limit=0){
 const makeHeader = function(head) {
   return "==> "+head+" <==";
 };
-// ['-n6%']
 const extractNumber = function(inputParameters) {
   let string = inputParameters.join('');
   if(string.includes('-c') && !string.match(/[0-9]/)) {
@@ -37,9 +36,21 @@ const extractNumber = function(inputParameters) {
 const getFileNames = (x=>x.filter(file => file.includes('.') || file.includes('_')));
 const getTypeAndLength = (x=>x.filter(file => !file.includes('.')));
 
+const findWronglVal = function(options){
+  let list = 'abdefghijklmopqrstuvwxyz';
+  list = list.split('');
+  options = options.join('');
+  let value = '';
+  if (list.some(x=>options.includes(x))){
+    value = options.slice(2);
+  }
+  return value;
+};
+
 const extractType = function(input) {
   input = input.join('');
   if(input.includes('-c')) { return '0';}
+  if(!input.includes('-n') && !input.includes('-c')) {  }
   return  1;
 }
 const classifyInput = function(userInput) {
@@ -54,7 +65,8 @@ const head = function(userInput=[],fs) {
   let delimiter = '';
   let text = '';
   let {file,extractNumber,type} = classifyInput(userInput);
-
+  let wrongValue = findWronglVal(getTypeAndLength(userInput)); 
+  if(wrongValue) {return 'head: illegal line count -- '+wrongValue;}
   let error = checkErrors(file,type,extractNumber);
   if(error) {return error;}
 
