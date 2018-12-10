@@ -170,5 +170,12 @@ describe("head",()=>{
       assert.equal(head(['--','fifteenLines.txt'],fs),files["tenLines.txt"]);
     });
   });
-
+});
+describe('head (for two files)',function(){
+  it("should return number of input lines with 2 files", function() {
+    const expectedOut = [
+      "==> fiveLines.txt <=="+"\n"+generateLines(5)+"\n",
+      "==> fifteenLines.txt <=="+"\n"+generateLines(10)].join('\n');
+    assert.deepEqual(head(["fiveLines.txt","fifteenLines.txt"],fs), expectedOut);
+  });
 });
