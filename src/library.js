@@ -71,20 +71,20 @@ const head = function(userInput = [], fs,command = 'head') {
   let { file, extractNumber, type } = classifyInput(userInput);
   let wrongValue = findWronglVal(getTypeAndLength(userInput));
   if (wrongValue && type == '1') {
-    return "head: illegal line count -- " + wrongValue;
+    return command + ": illegal line count -- " + wrongValue;
   }
   if (wrongValue && type == '0') {
-    return "head: illegal byte count -- " + wrongValue;
+    return command+": illegal byte count -- " + wrongValue;
   }
 
-  let error = checkErrors(file, type,userInput);
+  let error = checkErrors(file, type,userInput,command);
   if (error) {
     return error;
   }
 
   for (let count = 0; count < file.length; count++) {
     if (!fs.existsSync(file[count])) {
-      data.push("head: " + file[count] + ": No such file or directory");
+      data.push(command+": " + file[count] + ": No such file or directory");
       count++;
     }
     if (count == file.length) {
@@ -103,15 +103,15 @@ const head = function(userInput = [], fs,command = 'head') {
   return data.join("\n");
 };
 
-const checkErrors = function(fileName, type,userInput) {
+const checkErrors = function(fileName, type,userInput,command) {
   // console.log(type); 
   let value = extractNumber(getTypeAndLength(userInput));
   let invalidValue = value <= 0;
   if (invalidValue && type == "1") {
-    return "head: illegal line count -- " + value;
+    return command+": illegal line count -- " + value;
   }
   if (invalidValue && type == "0") {
-    return "head: illegal byte count -- " + value;
+    return command+": illegal byte count -- " + value;
   }
   // return 0;
 };
