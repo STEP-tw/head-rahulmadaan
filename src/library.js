@@ -145,4 +145,4 @@ module.exports = {
   getFileNames,
   getTypeAndLength,
   tail
-};
+  }
