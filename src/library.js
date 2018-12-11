@@ -126,11 +126,11 @@ const extractTailingContent = function(content, limit, type = "1") {
 };
 
 const getTailingLines = function(content, limit = 10) {
-  return content.split("\n").reverse().slice(1, limit + 1).reverse().join("\n");
+  return content.split("\n").reverse().slice(0, limit).reverse().join("\n");
 };
 
 const getTailingCharacters = function(content, limit = 0) {
-  return content.split("").reverse().slice(1, limit + 1).reverse().join("");
+  return content.split("").reverse().slice(0, limit ).reverse().join("");
 };
 
 
