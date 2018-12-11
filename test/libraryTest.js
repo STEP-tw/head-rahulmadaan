@@ -162,7 +162,7 @@ describe("head",()=>{
     });
   });
 
-  describe('for 5 lines as outupt',function(){
+  describe.skip('for 5 lines as outupt',function(){
     it('should return 5 lines if type is n and option is 5 as input',function(){
       assert.equal(head(['-n5','fifteenLines.txt'],fs),files["fiveLines.txt"]);
     });
@@ -171,7 +171,7 @@ describe("head",()=>{
     });
   });
 });
-describe('head (for two files)',function(){
+describe.skip('head (for two files)',function(){
   it("should return number of input lines with 2 files", function() {
     const expectedOut = [
       "==> fiveLines.txt <=="+"\n"+generateLines(5)+"\n",

@@ -6,17 +6,11 @@ const extractUsefulContent = function(content, limit, type = "1") {
 };
 
 const getLines = function(content, limit = 10) {
-  return content
-    .split("\n")
-    .slice(0, limit)
-    .join("\n");
+  return content.split("\n").slice(0, limit).join("\n");
 };
 
 const getCharacters = function(content, limit = 0) {
-  return content
-    .split("")
-    .slice(0, limit)
-    .join("");
+  return content.split("").slice(0, limit).join("");
 };
 
 const makeHeader = function(head) {
@@ -70,7 +64,7 @@ const classifyInput = function(userInput) {
   return { file: file, extractNumber: limit, type: type };
 };
 
-const head = function(userInput = [], fs) {
+const head = function(userInput = [], fs,command = 'head') {
   let data = [];
   let delimiter = "";
   let text = "";
@@ -101,13 +95,16 @@ const head = function(userInput = [], fs) {
       delimiter = "\n";
     }
     text = fs.readFileSync(file[count], "utf8");
-    data.push(extractUsefulContent(text, extractNumber, type));
+    if(command == 'head') 
+      data.push(extractUsefulContent(text, extractNumber, type));
+    if(command == 'tail')
+      data.push(extractTailingContent(text, extractNumber, type));
   }
   return data.join("\n");
 };
 
 const checkErrors = function(fileName, type,userInput) {
-// console.log(type); 
+  // console.log(type); 
   let value = extractNumber(getTypeAndLength(userInput));
   let invalidValue = value <= 0;
   if (invalidValue && type == "1") {
@@ -118,6 +115,24 @@ const checkErrors = function(fileName, type,userInput) {
   }
   // return 0;
 };
+const tail = function(userInput,fs) {
+  return head(userInput,fs,'tail');
+}
+const extractTailingContent = function(content, limit, type = "1") {
+  if (type == "1") {
+    return getTailingLines(content, limit);
+  }
+  return getTailingCharacters(content, limit);
+};
+
+const getTailingLines = function(content, limit = 10) {
+  return content.split("\n").reverse().slice(1, limit + 1).reverse().join("\n");
+};
+
+const getTailingCharacters = function(content, limit = 0) {
+  return content.split("").reverse().slice(1, limit + 1).reverse().join("");
+};
+
 
 module.exports = {
   extractUsefulContent,
@@ -128,5 +143,6 @@ module.exports = {
   extractType,
   makeHeader,
   getFileNames,
-  getTypeAndLength
+  getTypeAndLength,
+  tail
 };
