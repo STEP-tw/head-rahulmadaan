@@ -84,22 +84,6 @@ echo "for format -> node head.js -n16 file1 file2"
 node compareFiles.js
 
 echo  "\nIllegal Cases\n"
-
-head -x5 $input_file 2> .sysHead
-node head.js -x5 $input_file > .myHead
-echo "for format -> node head.js -x5 file1 (illegal option)"
-node compareFiles.js
-
-head -x 5 $input_file 2> .sysHead
-node head.js -x 5 $input_file > .myHead
-echo "for format -> node head.js -x 5 file1 (illegal option)"
-node compareFiles.js
-
-head --5 $input_file 2> .sysHead
-node head.js --5 $input_file > .myHead
-echo "for format -> node head.js --5 file1 (illegal option)"
-node compareFiles.js
-
 head -c0 $input_file 2> .sysHead
 node head.js -c0 $input_file > .myHead
 echo "for format -> node head.js -c0 file1 (illegal option)"
@@ -119,17 +103,6 @@ head -n 0 $input_file 2> .sysHead
 node head.js -n 0 $input_file > .myHead
 echo "for format -> node head.js -n 0 file1 (illegal option)"
 node compareFiles.js
-
-head -n 2.5 $input_file 2> .sysHead
-node head.js -n 2.5 $input_file > .myHead
-echo "for format -> node head.js -n 2.5 file1 (illegal option)"
-node compareFiles.js
-
-head -c 2.5 $input_file 2> .sysHead
-node head.js -c 2.5 $input_file > .myHead
-echo "for format -> node head.js -c 2.5 file1 (illegal option)"
-node compareFiles.js
-
 
 #head -- 5 $input_file 2> .sysHead 1>> .sysHead
 #node head.js -- 5 $input_file > .myHead
