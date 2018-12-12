@@ -16,24 +16,25 @@ const getCharacters = function(content, limit = 0) {
 const makeHeader = function(head) {
   return "==> " + head + " <==";
 };
-const extractNumber = function(inputParameters) {
-  let string = inputParameters.join("");
-  if (string.includes("-c") && !string.match(/[0-9]/)) {
-    return 0;
-  }
-  if (string.match(/[0]/) && !string.match(/[1-9]/)) {
+const extractNumber = function(userInput) {
+  let input = userInput.join("");
+
+  let conditionOne = input.includes("-c") && !input.match(/[0-9]/);
+  let conditionTwo = input.match(/[0]/) && !input.match(/[1-9]/);
+  if(eval(conditionOne) || eval(conditionTwo)) {
     return 0;
   }
   let index = 0;
 
-  while (!parseInt(string) && index < inputParameters.join("").length) {
+  while (!parseInt(input) && index < userInput.join("").length) {
     index++;
-    string = inputParameters.join("");
-    string = string.slice(index);
+    input = userInput.join("");
+    input = input.slice(index);
   }
-  if(!inputParameters.includes('-c') && !inputParameters.includes('-n')) { return Math.abs(parseInt(string));  }
-  return parseInt(string);
-};
+  if(!userInput.includes('-c') && !userInput.includes('-n')) { return Math.abs(parseInt(input));  }
+
+  return parseInt(input);
+}
 
 const getFileNames = x =>
   x.filter(file => file.includes(".") || file.includes("_"));
@@ -145,4 +146,4 @@ module.exports = {
   getFileNames,
   getTypeAndLength,
   tail
-  }
+}
