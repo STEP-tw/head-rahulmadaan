@@ -1,12 +1,8 @@
-let {
-  makeHeader,
-  head,
-  getFileNames,
-  getOptionAndNumber,
-  extractNumber,
-  getLines,
-  getCharacters
-} = require("../src/library.js");
+let { getLines, getCharacters, getTailingLines, getTailingCharacters, head, tail, extractUsefulContent,
+  extractTailingContent, readFile, extractNumber, extractType, makeHeader, getFileNames,
+  getOptionAndNumber, findWronglVal, illegalLineCount, invalidValueErrors, checkError,
+  classifyInput } = require('../src/library.js');
+
 let assert = require("assert");
 
 describe("makeHeader", function() {
@@ -187,5 +183,22 @@ describe("head (for two files)", function() {
       head(["fiveLines.txt", "fifteenLines.txt"], fs),
       expectedOut
     );
+  });
+});
+describe('getTailingLines', function () {
+  let text = 'dfs\ndfs\nfd\ngre\ngfe';
+  it('should return given number of tailing lines from the text', function () {
+    assert.deepEqual(getTailingLines(text, 2), 'gre\ngfe');
+    assert.deepEqual(getTailingLines(text, 1), 'gfe');
+    assert.deepEqual(getTailingLines(text, 6), text);
+  });
+})
+describe('getTailingCharacters', function () {
+  let text = 'jd djf \n kfd fdhj';
+  it('should return given number of tailing characters from the text', function () {
+    assert.deepEqual(getTailingCharacters(text, 2), 'hj');
+    assert.deepEqual(getTailingCharacters(text, 5), ' fdhj');
+    assert.deepEqual(getTailingCharacters(text, 8), 'kfd fdhj');
+    assert.deepEqual(getTailingCharacters(text, 20), text);
   });
 });

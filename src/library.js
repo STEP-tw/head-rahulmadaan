@@ -175,16 +175,24 @@ const head = function(userInput = [], fs, command = "head") {
   }
   return data.join("\n");
 };
-
 module.exports = {
-  extractUsefulContent,
-  extractNumber,
-  head,
   getLines,
   getCharacters,
+  getTailingLines,
+  getTailingCharacters,
+  head,
+  tail,
+  extractUsefulContent,
+  extractTailingContent,
+  readFile,
+  extractNumber,
   extractType,
   makeHeader,
   getFileNames,
   getOptionAndNumber,
-  tail
+  findWronglVal,
+  illegalLineCount,
+  invalidValueErrors,
+  checkError,
+  classifyInput,
 };
