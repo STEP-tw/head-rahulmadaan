@@ -88,6 +88,7 @@ const illegalLineCount = function(wrongValue, type) {
     return command + ": illegal byte count -- " + wrongValue;
   }
 };
+
 const invalidValueErrors = function(fileName, type, userInput, command) {
   // command => head / tail , type => n /c
   let value = extractNumber(getOptionAndNumber(userInput));
@@ -99,10 +100,10 @@ const invalidValueErrors = function(fileName, type, userInput, command) {
     return command + ": illegal byte count -- " + value;
   }
 };
+
 const checkError = function(userInput, command) {
   let { file, extractNumber, type } = classifyInput(userInput);
   let wrongValue = findWronglVal(getOptionAndNumber(userInput));
-
   let illegalCount = illegalLineCount(wrongValue, type);
   let error = invalidValueErrors(file, type, userInput, command);
 
@@ -113,10 +114,7 @@ const checkError = function(userInput, command) {
     return illegalCount;
   }
 };
-const readFile = function(fs, fileName) {
-  // return the contents of given file
-  return fs.readFileSync(fileName, "utf8");
-};
+
 const tail = function(userInput, fs) {
   return head(userInput, fs, "tail");
 };
@@ -146,32 +144,34 @@ const getTailingCharacters = function(content, numberOfLines = 0) {
     .join("");
 };
 
+const readFile = function(fileName, value, type, command, fs) {
+  // return the contents of given file
+  let text = fs.readFileSync(fileName, "utf8");
+  if (command == "head") return extractUsefulContent(text, value, type);
+  if (command == "tail") return extractTailingContent(text, value, type);
+};
+
 const head = function(userInput = [], fs, command = "head") {
   let data = [];
   let delimiter = "";
-  let text = "";
   let { file, extractNumber, type } = classifyInput(userInput);
   let errorCheck = checkError(userInput, command);
   if (errorCheck) {
     return errorCheck;
   }
   for (let count = 0; count < file.length; count++) {
-    if (!fs.existsSync(file[count])) {
+    if (fs.existsSync(file[count])) {
+      if (count == file.length) {
+        return data.join("\n");
+      }
+      if (file.length > 1) {
+        data.push(delimiter + makeHeader(file[count]));
+        delimiter = "\n";
+      }
+      data.push(readFile(file[count], extractNumber, type, command, fs));
+    }
+    if (!fs.existsSync(file[count]))
       data.push(command + ": " + file[count] + ": No such file or directory");
-      count++;
-    }
-    if (count == file.length) {
-      return data.join("\n");
-    }
-    if (file.length > 1) {
-      data.push(delimiter + makeHeader(file[count]));
-      delimiter = "\n";
-    }
-    text = readFile(fs, file[count]);
-    if (command == "head")
-      data.push(extractUsefulContent(text, extractNumber, type));
-    if (command == "tail")
-      data.push(extractTailingContent(text, extractNumber, type));
   }
   return data.join("\n");
 };
