@@ -1,7 +1,7 @@
 let { makeHeader,
   head,
   getFileNames,
-  getTypeAndLength,
+  getOptionAndNumber,
   extractNumber,
   getLines,
   getCharacters
@@ -86,14 +86,14 @@ describe("getCharacters",function() {
     assert.deepEqual(getCharacters("abc", ), "" );
   });
 });
-describe('getTypeAndLength',function(){
+describe('getOptionAndNumber',function(){
   it('should return empty string with no input',function(){
-    assert.equal(getTypeAndLength(['']),'');
+    assert.equal(getOptionAndNumber(['']),'');
   });
   it('should return type and length if no other argument is given',function(){
-    assert.deepEqual(getTypeAndLength(['']),['']);
-    assert.deepEqual(getTypeAndLength(['-n2','demo.js']),['-n2']);
-    assert.deepEqual(getTypeAndLength(['-c1','demo.js','test.txt']),['-c1']);
+    assert.deepEqual(getOptionAndNumber(['']),['']);
+    assert.deepEqual(getOptionAndNumber(['-n2','demo.js']),['-n2']);
+    assert.deepEqual(getOptionAndNumber(['-c1','demo.js','test.txt']),['-c1']);
   });
 });
 
