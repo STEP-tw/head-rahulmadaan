@@ -4,7 +4,6 @@ const extractUsefulContent = function(content, limit, type = "1") {
   }
   return getCharacters(content, limit);
 };
-
 const getLines = function(content, limit = 10) {
   // get specified lines from a file
   return content
@@ -51,7 +50,6 @@ const getFileNames = x =>
   x.filter(file => file.includes(".") || file.includes("_")); // returns file names from user input
 
 const getOptionAndNumber = x => x.filter(file => !file.includes(".")); // returns option and number from user input
-
 const findWronglVal = function(options) {
   let list = "abdefghijklmopqrstuvwxyz";
   list = list.split("");
