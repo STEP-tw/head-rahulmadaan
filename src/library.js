@@ -79,11 +79,14 @@ const head = function (userInput = [], fs, command = "head") {
   let text = "";
   let { file, extractNumber, type } = classifyInput(userInput);
   let wrongValue = findWronglVal(getOptionAndNumber(userInput));
-  if (wrongValue && type == "1") {
+  if (wrongValue && type == "1" && command == 'head') {
     return command + ": illegal line count -- " + wrongValue;
   }
-  if (wrongValue && type == "0") {
+  if (wrongValue && type == "0" && command == 'head') {
     return command + ": illegal byte count -- " + wrongValue;
+  }
+  if (wrongValue && command == 'tail') {
+    return command + ": illegal offset -- " + wrongValue;
   }
 
   let error = checkErrors(file, type, userInput, command);
