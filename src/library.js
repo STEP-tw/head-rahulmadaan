@@ -118,8 +118,6 @@ const head = function (userInput = [], fs, command = "head") {
 const checkErrors = function (fileName, type, userInput, command) {
   let value = extractNumber(getOptionAndNumber(userInput));
   let invalidValue = value <= 0;
-   //let a = "value <=0 && type == '1' && command == 'head'"; //': illegal line count -- ',
-   //let b= "value <=0 && type == '0' && command == 'tail'"; // ': illegal byte count -- '
   
   if (value <= 0 && type == "1" && command == 'head') {
     return command + ": illegal line count -- " + value;

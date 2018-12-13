@@ -260,3 +260,148 @@ describe(' head "c" ', function () {
     assert.equal(head(['-c','-2','fiveLines.txt'],fs), expected_output);
   });
 });
+//-----------------------------------------------------------------------------------------------------------------------
+describe.only('tail',function(){
+  it('should return missing file error',function(){
+    let expected_output = 'tail: missing.txt: No such file or directory';
+    assert.equal(tail(['missing.txt'],fs,'tail'),expected_output);
+  });
+  it('should return 3 lines',function(){
+    let expected_output = generateLines(5).slice(4);
+    assert.equal(tail(['-n3','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return 3 lines',function(){
+    let expected_output = generateLines(5).slice(4);
+    assert.equal(tail(['-n','3','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return 3 lines',function(){
+    let expected_output = generateLines(5).slice(6);
+    assert.equal(tail(['-n','-3','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return empty string',function(){
+    assert.equal(tail(['-n','0','fiveLines.txt'],fs,'tail'),' ');
+  });
+  it('should return empty string',function(){
+    assert.equal(tail(['-n0','fiveLines.txt'],fs,'tail'),' ');
+  });
+  it('should return illegal offset error',function(){
+    let expected_output = 'tail: illegal offset -- a'
+    assert.equal(tail(['-na','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return illegal offset error',function(){
+    let expected_output = 'tail: illegal offset -- -a'
+    assert.equal(tail(['-n','-a','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return 5',function(){
+    assert.equal(tail(['-c1','fiveLines.txt'],fs,'tail'),'5');
+  });
+  it('should return 5',function(){
+    assert.equal(tail(['-c','1','fiveLines.txt'],fs,'tail'),'5');
+  });
+  it('should return nothing',function(){
+    assert.equal(tail(['-c','0','fiveLines.txt'],fs,'tail'),' ');
+  });
+  it('should return nothing',function(){
+    assert.equal(tail(['-c0','fiveLines.txt'],fs,'tail'),' ');
+  });
+  it('should return illegal offset error',function(){
+    let expected_output = 'tail: illegal offset -- a';
+    assert.equal(tail(['-ca','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return illegal offset error',function(){
+    let expected_output = 'tail: illegal offset -- a';
+    assert.equal(tail(['-c','a','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return 10,5 lines',function(){
+    let expected_output = ['==> fifteenLines.txt <==',generateLines(15).slice(10),'\n==> fiveLines.txt <==',generateLines(5)].join('\n');
+    assert.equal(tail(['fifteenLines.txt','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return error for first and 5 lines for second file',function(){
+    let expected_output = ['tail: missing.txt: No such file or directory','==> fiveLines.txt <==',generateLines(5)].join('\n');
+    assert.equal(tail(['missing.txt','fiveLines.txt'],fs,'tail'),expected_output);
+  });
+  it('should return error for last one and return 5 lines of first one',function(){
+    let expected_output = ['==> fiveLines.txt <==',generateLines(5),'tail: missing.txt: No such file or directory'].join('\n');
+    assert.equal(tail(['fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
+  }) ;
+  it('should return last line for first and error for missing file',function(){
+    let expected_output = ['==> fiveLines.txt <==','5','tail: missing.txt: No such file or directory'].join('\n');
+    assert.equal(tail(['-1','fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
+  });
+  it('should return nothing for first file and error for second',function(){
+    let expected_output = ['==> fiveLines.txt <==',generateLines(5),
+      'tail: missing.txt: No such file or directory'].join('\n');
+    assert.equal(tail(['fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
+  });
+});
+/*
+it('should return 5 for each',function(){
+  let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+  equal(tail(['-n1 fiveLines.txt fiveLines.txt']),expected_output);
+});
+it('should return 5 for each',function(){
+  let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+  equal(tail(['-n 1 fiveLines.txt fiveLines.txt']),expected_output); 
+});
+it('should return 5 for each',function(){
+  let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+  equal(tail(['-n -1 fiveLines.txt fiveLines.txt']),expected_output); 
+});
+it('should return 1 line for first file and error for second',function(){
+  let expected_output = ['==> fiveLines.txt <==','5','tail: missing: No such file or directory'].join('\n');
+  equal(tail(['-n 1 fiveLines.txt missing']),expected_output);
+});
+it('should return nothing for both files',function(){
+  let expected_output = ['==> fiveLines.txt <==','','==> fiveLines.txt <==',''].join('\n');
+  equal(tail(['-n 0 fiveLines.txt fiveLines.txt']),expected_output);
+});
+it('should return nothing for both files',function(){
+  let expected_output = ['==> fiveLines.txt <==','','==> fiveLines.txt <==',''].join('\n');
+  equal(tail(['-n0 fiveLines.txt fiveLines.txt']),expected_output);
+});
+it('should return last line of both files',function(){
+  let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+  equal(tail(['-n -1 fiveLines.txt fiveLines.txt']),expected_output);
+});
+it('should return error for illegal offset',function(){
+  let expected_output = 'tail: illegal offset -- a';
+  equal(tail(['-na fiveLines.txt fiveLines.txt']),expected_output);
+});
+it('should return error for illegal offset',function(){
+  let expected_output = 'tail: illegal offset -- a';
+  equal(tail(['-n a fiveLines.txt fiveLines.txt']),expected_output);
+});
+it('should return 5 in both file with title',function(){
+  let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+  equal(tail(['-c1 fiveLines.txt fiveLines.txt']),expected_output);
+});
+it('should return 5 in both file with title',function(){
+    let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+    equal(tail(['-c 1 fiveLines.txt fiveLines.txt']),expected_output);
+  });
+  it('should return 5 in both file with title',function(){
+    let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+    equal(tail(['-c -1 fiveLines.txt fiveLines.txt']),expected_output);
+  });
+  it('should return nothing for both files with title',function(){
+    let expected_output = ['==> fiveLines.txt <==','','==> fiveLines.txt <==',''].join('\n');
+    equal(tail(['-c0 fiveLines.txt fiveLines.txt']),expected_output);
+  });
+  it('should return nothing for both files with title',function(){
+    let expected_output = ['==> fiveLines.txt <==','','==> fiveLines.txt <==',''].join('\n');
+    equal(tail(['-c 0 fiveLines.txt fiveLines.txt']),expected_output);
+  });
+  it('should return 5 in both file with title',function(){
+    let expected_output = ['==> fiveLines.txt <==','5','==> fiveLines.txt <==','5'].join('\n');
+    equal(tail(['-c -1 fiveLines.txt fiveLines.txt']),expected_output);
+  });
+  it('should return error for illegal offset',function(){
+    let expected_output = 'tail: illegal offset -- a';
+    equal(tail(['-na fiveLines.txt fiveLines.txt']),expected_output);
+  });
+  it('should return error for illegal offset',function(){
+    let expected_output = 'tail: illegal offset -- a';
+    equal(tail(['-n a fiveLines.txt fiveLines.txt']),expected_output);
+  });
+});
+*/
