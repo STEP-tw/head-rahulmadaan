@@ -20,9 +20,11 @@ const getCharacters = function (content, limit = 0) { // get specified character
 };
 
 const makeHeader = function (title) {
+  // to add header on file content
   return "==> " + title + " <==";
 };
 const extractNumber = function (userInput) {
+  // extract value from user input
   let input = userInput.join("");
 
   let conditionOne = input.includes("-c") && !input.match(/[0-9]/);
@@ -74,6 +76,7 @@ const classifyInput = function (userInput) { // for classification of input
 };
 
 const head = function (userInput = [], fs, command = "head") {
+  // head command
   let data = [];
   let delimiter = "";
   let text = "";
@@ -130,6 +133,7 @@ const checkErrors = function (fileName, type, userInput, command) {
   }
 };
 const tail = function (userInput, fs) {
+  // tail command
   return head(userInput, fs, "tail");
 };
 const extractTailingContent = function (content, limit, option = "1") { // option -> n,c <== n=1 & c=0
