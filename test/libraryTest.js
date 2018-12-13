@@ -1,7 +1,12 @@
-let { getLines, getCharacters, getTailingLines, getTailingCharacters, head, tail, extractUsefulContent,
-  extractTailingContent, readFile, extractNumber, extractType, makeHeader, getFileNames,
-  getOptionAndNumber, findWronglVal, illegalLineCount, invalidValueErrors, checkError,
-  classifyInput } = require('../src/library.js');
+let { makeHeader,
+  head,
+  getFileNames,
+  getTypeAndLength,
+  extractNumber,
+  getLines,
+  getCharacters
+} = require('../src/library.js');
+let assert = require('assert');
 
 let assert = require("assert");
 
@@ -83,16 +88,14 @@ describe("getCharacters", function() {
     assert.deepEqual(getCharacters("abc"), "");
   });
 });
-describe("getOptionAndNumber", function() {
-  it("should return empty string with no input", function() {
-    assert.equal(getOptionAndNumber([""]), "");
+describe('getTypeAndLength',function(){
+  it('should return empty string with no input',function(){
+    assert.equal(getTypeAndLength(['']),'');
   });
-  it("should return type and length if no other argument is given", function() {
-    assert.deepEqual(getOptionAndNumber([""]), [""]);
-    assert.deepEqual(getOptionAndNumber(["-n2", "demo.js"]), ["-n2"]);
-    assert.deepEqual(getOptionAndNumber(["-c1", "demo.js", "test.txt"]), [
-      "-c1"
-    ]);
+  it('should return type and length if no other argument is given',function(){
+    assert.deepEqual(getTypeAndLength(['']),['']);
+    assert.deepEqual(getTypeAndLength(['-n2','demo.js']),['-n2']);
+    assert.deepEqual(getTypeAndLength(['-c1','demo.js','test.txt']),['-c1']);
   });
 });
 
