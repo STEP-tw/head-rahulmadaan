@@ -1,1 +1,6 @@
 *.sw*
+.myHead 
+.nyc_out* 
+.sys* 
+.abc.sh* 
+coverage* 
