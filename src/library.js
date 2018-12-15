@@ -1,21 +1,21 @@
-const extractUsefulContent = function (content, limit, type = "1") {
+const extractUsefulContent = function (content, value, type = "1") { // value -> n / c <== n=1 & c=0
   if (type == "1") {
-    return getLines(content, limit);
+    return getLines(content, value);
   }
-  return getCharacters(content, limit);
+  return getCharacters(content, value);
 };
 
-const getLines = function (content, limit = 10) { // get specified lines from a file
+const getLines = function (content, value = 10) { // get specified lines from a file
   return content
     .split("\n")
-    .slice(0, limit)
+    .slice(0, value)
     .join("\n");
 };
 
-const getCharacters = function (content, limit = 0) { // get specified characters from a file
+const getCharacters = function (content, value = 0) { // get specified characters from a file
   return content
     .split("")
-    .slice(0, limit)
+    .slice(0, value)
     .join("");
 };
 
@@ -27,13 +27,13 @@ const extractNumber = function (userInput) {
   // extract value from user input
   let input = userInput.join("");
 
-  let conditionOne = input.includes("-c") && !input.match(/[0-9]/);
-  let conditionTwo = input.match(/[0]/) && !input.match(/[1-9]/);
-  if (eval(conditionOne) || eval(conditionTwo)) {
+  let possibleErrorOne = input.includes("-c") && !input.match(/[0-9]/);
+  let possibleErrorTwo = input.match(/[0]/) && !input.match(/[1-9]/);
+  if (eval(possibleErrorOne) || eval(possibleErrorTwo)) {
     return 0;
   }
-  let index = 0;
 
+  let index = 0;
   while (!parseInt(input) && index < userInput.join("").length) {
     index++;
     input = userInput.join("");
@@ -149,7 +149,7 @@ const extractTailingContent = function (content, limit, option = "1") { // optio
   return getTailingCharacters(content, limit);
 };
 
-const getTailingLines = function (content, limit = 10) {
+const getTailingLines = function (content, limit = 10) { // get lines from tail of file
   return content
     .split("\n")
     .reverse()
@@ -158,7 +158,7 @@ const getTailingLines = function (content, limit = 10) {
     .join("\n");
 };
 
-const getTailingCharacters = function (content, limit = 0) {
+const getTailingCharacters = function (content, limit = 0) { // get characters from tail of file
   return content
     .split("")
     .reverse()
