@@ -347,6 +347,9 @@ describe('extractUsefulContent',function(){
   it('get 5 head lines',function(){
     assert.equal(extractUsefulContent(generateLines(10),5,'1'),generateLines(5));
   });
+  it('should return 10 lines from head, if number of lines is not specified',function(){
+    assert.equal(extractUsefulContent(generateLines(10),5),generateLines(5));
+  });
   it('get 5 head characters',function(){
     assert.equal(extractUsefulContent(generateLines(10),5,'0'),'1\n2\n3');
   });
