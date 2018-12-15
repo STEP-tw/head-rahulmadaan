@@ -48,6 +48,7 @@ const extractNumber = function (userInput) {
 
 const getFileNames = x =>
   x.filter(file => file.includes(".") || file.includes("_"));   // returns file names from user input
+
 const getOptionAndNumber = x => x.filter(file => !file.includes(".")); // returns option and number from user input
 
 const findWronglVal = function (options) {
@@ -74,13 +75,7 @@ const classifyInput = function (userInput) { // for classification of input
   let type = extractType(getOptionAndNumber(userInput));
   return { file: file, extractNumber: number, type: type };
 };
-
-const head = function (userInput = [], fs, command = "head") {
-  // head command
-  let data = [];
-  let delimiter = "";
-  let text = "";
-  let { file, extractNumber, type } = classifyInput(userInput);
+const checkIllegalCountErrors = function(userInput,command,type) {
   let wrongValue = findWronglVal(getOptionAndNumber(userInput));
   if (wrongValue && type == "1" && command == 'head') {
     return command + ": illegal line count -- " + wrongValue;
@@ -91,12 +86,23 @@ const head = function (userInput = [], fs, command = "head") {
   if (wrongValue && command == 'tail') {
     return command + ": illegal offset -- " + wrongValue;
   }
-
-  let error = checkErrors(file, type, userInput, command);
-  if (error) {
-    return error;
+};
+const checkErrors = function(userInput,command,type,fileName) {
+  if(checkIllegalCountErrors(userInput,command,type)) {
+    return checkIllegalCountErrors(userInput,command,type)
   }
-
+  if(checkValueErrors(fileName, type, userInput, command)) {
+    return checkValueErrors(fileName, type, userInput, command)
+  }
+}
+const head = function (userInput, fs, command = "head") {
+  // head command
+  let data = [];
+  let delimiter = "";
+  let text = "";
+  let { file, extractNumber, type } = classifyInput(userInput);
+  let errors = checkErrors(userInput,command,type,file);
+  if(errors) { return errors; }
   for (let count = 0; count < file.length; count++) {
     if (!fs.existsSync(file[count])) {
       data.push(command + ": " + file[count] + ": No such file or directory");
@@ -118,10 +124,10 @@ const head = function (userInput = [], fs, command = "head") {
   return data.join("\n");
 };
 
-const checkErrors = function (fileName, type, userInput, command) {
+const checkValueErrors = function (fileName, type, userInput, command) {
   let value = extractNumber(getOptionAndNumber(userInput));
   let invalidValue = value <= 0;
-  
+
   if (value <= 0 && type == "1" && command == 'head') {
     return command + ": illegal line count -- " + value;
   }
@@ -130,7 +136,7 @@ const checkErrors = function (fileName, type, userInput, command) {
   }
   if(command == 'tail' && value==0) {
     return ' ';
-  }
+  } 
 };
 const tail = function (userInput, fs) {
   // tail command
