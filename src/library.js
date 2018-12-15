@@ -173,5 +173,7 @@ module.exports = {
   getOptionAndNumber,
   tail,
   getTailingCharacters,
-  getTailingLines
+  getTailingLines,
+  extractUsefulContent,
+  extractTailingContent
 };

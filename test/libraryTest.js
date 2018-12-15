@@ -7,7 +7,9 @@ let { makeHeader,
   getCharacters,
   getTailingLines,
   getTailingCharacters,
-  tail
+  tail,
+  extractTailingContent,
+  extractUsefulContent
 } = require('../src/library.js');
 let assert = require('assert');
 
@@ -173,6 +175,9 @@ describe("head", () => {
       assert.equal(head(['--', 'fifteenLines.txt'], fs), files["tenLines.txt"]);
     });
   });
+  it('should return empty line for no input',function(){
+    assert.equal(head([''],fs),'');
+  });
 });
 describe('head (for two files)', function () {
   it("should return number of input lines with 2 files", function () {
@@ -183,11 +188,13 @@ describe('head (for two files)', function () {
   });
 });
 describe('getTailingLines', function () {
-  let text = 'dfs\ndfs\nfd\ngre\ngfe';
   it('should return given number of tailing lines from the text', function () {
-    assert.deepEqual(getTailingLines(text, 2), 'gre\ngfe');
-    assert.deepEqual(getTailingLines(text, 1), 'gfe');
-    assert.deepEqual(getTailingLines(text, 6), text);
+    assert.deepEqual(getTailingLines(generateLines(10), 2), '9\n10');
+    assert.deepEqual(getTailingLines(generateLines(10), 1), '10');
+    assert.deepEqual(getTailingLines(generateLines(10), 6), '5\n6\n7\n8\n9\n10');
+  });
+  it('shoudld return 10 lines if number of lines is not given',function(){
+    assert.deepEqual(getTailingLines(generateLines(10)),generateLines(10));
   });
 })
 describe('getTailingCharacters', function () {
@@ -197,6 +204,9 @@ describe('getTailingCharacters', function () {
     assert.deepEqual(getTailingCharacters(text, 5), ' fdhj');
     assert.deepEqual(getTailingCharacters(text, 8), 'kfd fdhj');
     assert.deepEqual(getTailingCharacters(text, 20), text);
+  });
+  it('should return 0 characters, if number of character is not specified',function(){
+    assert.deepEqual(getTailingCharacters(text), '');
   });
 });
 describe('head -- illegal line count', function () {
@@ -331,5 +341,21 @@ describe('tail',function(){
     let expected_output = ['==> fiveLines.txt <==',generateLines(5),
       'tail: missing.txt: No such file or directory'].join('\n');
     assert.equal(tail(['fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
+  });
+});
+describe('extractUsefulContent',function(){
+  it('get 5 head lines',function(){
+    assert.equal(extractUsefulContent(generateLines(10),5,'1'),generateLines(5));
+  });
+  it('get 5 head characters',function(){
+    assert.equal(extractUsefulContent(generateLines(10),5,'0'),'1\n2\n3');
+  });
+});
+describe('extractTailingContent',function(){
+  it('should return 5 line from tail',function(){
+    assert.equal(extractTailingContent(generateLines(10),5,"1"),"6\n7\n8\n9\n10");
+  });
+  it('should return 3 characters from tail',function(){
+    assert.equal(extractTailingContent(generateLines(10),3),"8\n9\n10");
   });
 });
