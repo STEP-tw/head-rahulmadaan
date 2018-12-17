@@ -38,12 +38,12 @@ describe('extractNumber', function () {
 
   it('should return 0 when input have no integer and type is c', function () {
     assert.equal(extractNumber(['-c']), 0);
-    assert.equal(extractNumber(['./head.js', '-c']), 0);
+    assert.equal(extractNumber(['-c']), 0);
   });
 
   it('should return first integer when input have more then one integer', function () {
     assert.equal(extractNumber(['-n1', '-c2']), 1);
-    assert.equal(extractNumber(['./head.js', 'c', '12']), 12);
+    assert.equal(extractNumber(['c', '12']), 12);
   });
 });
 
@@ -74,6 +74,9 @@ describe("getLines", function () {
   });
   it("should work for less no of lines with more requirement of no of lines", function () {
     assert.deepEqual(getLines('a\nb\nc', 5), 'a\nb\nc');
+  });
+  it("should return 10 lines default, if value is not given", function () {
+    assert.deepEqual(getLines('1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15'), '1\n2\n3\n4\n5\n6\n7\n8\n9\n10');
   });
 });
 describe("getCharacters", function () {
@@ -119,24 +122,12 @@ const generateChars = function (numberOfChars) {
 const createHeader = function (head) {
   return "==> " + head + " <==";
 }
-const joinFiles = function (file1, file2) {
-  let content = [];
-  content.push(createHeader(file1));
-  content.push(file1);
-  content.push('\n');
-  content.push(createHeader(file2));
-  content.push(file2);
-  return content.join('\n');
-}
 const fs = {};
 files = {
   "fiveLines.txt": generateLines(5),
   "tenLines.txt": generateLines(10),
   "fifteenLines.txt": generateLines(15),
   "noLines.txt": generateLines(0),
-}
-joins = {
-  "twoFilesWithLines": joinFiles(files["tenLines.txt"], files["tenLines.txt"])
 }
 
 fs.readFileSync = function (path, encoding) {
@@ -155,7 +146,7 @@ fs.existsSync = function (path) {
 describe("head", () => {
   describe('empty file as input', function () {
     it('should return no content if empty file is given in input', function () {
-      assert.equal(head(["noLines.txt"], fs), '');
+      assert.equal(head([""], fs), '');
     });
   });
   describe('for 10 lines as output', function () {
@@ -182,19 +173,19 @@ describe("head", () => {
 describe('head (for two files)', function () {
   it("should return number of input lines with 2 files", function () {
     const expectedOut = [
-      "==> fiveLines.txt <==" + "\n" + generateLines(5) + "\n",
-      "==> fifteenLines.txt <==" + "\n" + generateLines(10)].join('\n');
+      "==> fiveLines.txt <==" + "\n" + files['fiveLines.txt'] + "\n",
+      "==> fifteenLines.txt <==" + "\n" + files['tenLines.txt']].join('\n');
     assert.deepEqual(head(["fiveLines.txt", "fifteenLines.txt"], fs), expectedOut);
   });
 });
 describe('getTailingLines', function () {
   it('should return given number of tailing lines from the text', function () {
-    assert.deepEqual(getTailingLines(generateLines(10), 2), '9\n10');
-    assert.deepEqual(getTailingLines(generateLines(10), 1), '10');
-    assert.deepEqual(getTailingLines(generateLines(10), 6), '5\n6\n7\n8\n9\n10');
+    assert.deepEqual(getTailingLines(files['tenLines.txt'], 2), '9\n10');
+    assert.deepEqual(getTailingLines(files['tenLines.txt'], 1), '10');
+    assert.deepEqual(getTailingLines(files['tenLines.txt'], 6), '5\n6\n7\n8\n9\n10');
   });
   it('shoudld return 10 lines if number of lines is not given',function(){
-    assert.deepEqual(getTailingLines(generateLines(10)),generateLines(10));
+    assert.deepEqual(getTailingLines(files['tenLines.txt']),files['tenLines.txt']);
   });
 })
 describe('getTailingCharacters', function () {
@@ -215,7 +206,7 @@ describe('head -- illegal line count', function () {
     assert.equal(head(['-0', 'tenLines.txt'], fs, 'head'), expected_output);
   });
   it('should return 5 lines', function () {
-    let fiveLines = generateLines(5);
+    let fiveLines = files['fiveLines.txt'];
     assert.deepEqual(head(['-n5', 'tenLines.txt'], fs, 'head'), fiveLines);
   });
   it('should return error when missing file is given', function () {
@@ -276,15 +267,15 @@ describe('tail',function(){
     assert.equal(tail(['missing.txt'],fs,'tail'),expected_output);
   });
   it('should return 3 lines',function(){
-    let expected_output = generateLines(5).slice(4);
+    let expected_output = files['fiveLines.txt'].slice(4);
     assert.equal(tail(['-n3','fiveLines.txt'],fs,'tail'),expected_output);
   });
   it('should return 3 lines',function(){
-    let expected_output = generateLines(5).slice(4);
+    let expected_output = files['fiveLines.txt'].slice(4);
     assert.equal(tail(['-n','3','fiveLines.txt'],fs,'tail'),expected_output);
   });
   it('should return 3 lines',function(){
-    let expected_output = generateLines(5).slice(6);
+    let expected_output = files['fiveLines.txt'].slice(6);
     assert.equal(tail(['-n','-3','fiveLines.txt'],fs,'tail'),expected_output);
   });
   it('should return empty string',function(){
@@ -322,15 +313,15 @@ describe('tail',function(){
     assert.equal(tail(['-c','a','fiveLines.txt'],fs,'tail'),expected_output);
   });
   it('should return 10,5 lines',function(){
-    let expected_output = ['==> fifteenLines.txt <==',generateLines(15).slice(10),'\n==> fiveLines.txt <==',generateLines(5)].join('\n');
+    let expected_output = ['==> fifteenLines.txt <==',files['fifteenLines.txt'].slice(10),'\n==> fiveLines.txt <==',files['fiveLines.txt']].join('\n');
     assert.equal(tail(['fifteenLines.txt','fiveLines.txt'],fs,'tail'),expected_output);
   });
   it('should return error for first and 5 lines for second file',function(){
-    let expected_output = ['tail: missing.txt: No such file or directory','==> fiveLines.txt <==',generateLines(5)].join('\n');
+    let expected_output = ['tail: missing.txt: No such file or directory','==> fiveLines.txt <==',files['fiveLines.txt']].join('\n');
     assert.equal(tail(['missing.txt','fiveLines.txt'],fs,'tail'),expected_output);
   });
   it('should return error for last one and return 5 lines of first one',function(){
-    let expected_output = ['==> fiveLines.txt <==',generateLines(5),'tail: missing.txt: No such file or directory'].join('\n');
+    let expected_output = ['==> fiveLines.txt <==',files['fiveLines.txt'],'tail: missing.txt: No such file or directory'].join('\n');
     assert.equal(tail(['fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
   }) ;
   it('should return last line for first and error for missing file',function(){
@@ -338,27 +329,27 @@ describe('tail',function(){
     assert.equal(tail(['-1','fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
   });
   it('should return nothing for first file and error for second',function(){
-    let expected_output = ['==> fiveLines.txt <==',generateLines(5),
+    let expected_output = ['==> fiveLines.txt <==',files['fiveLines.txt'],
       'tail: missing.txt: No such file or directory'].join('\n');
     assert.equal(tail(['fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
   });
 });
 describe('extractUsefulContent',function(){
   it('get 5 head lines',function(){
-    assert.equal(extractUsefulContent(generateLines(10),5,'1'),generateLines(5));
+    assert.equal(extractUsefulContent(files['tenLines.txt'],5,'1'),files['fiveLines.txt']);
   });
   it('should return 10 lines from head, if number of lines is not specified',function(){
-    assert.equal(extractUsefulContent(generateLines(10),5),generateLines(5));
+    assert.equal(extractUsefulContent(files['tenLines.txt'],5),files['fiveLines.txt']);
   });
   it('get 5 head characters',function(){
-    assert.equal(extractUsefulContent(generateLines(10),5,'0'),'1\n2\n3');
+    assert.equal(extractUsefulContent(files['tenLines.txt'],5,'0'),'1\n2\n3');
   });
 });
 describe('extractTailingContent',function(){
   it('should return 5 line from tail',function(){
-    assert.equal(extractTailingContent(generateLines(10),5,"1"),"6\n7\n8\n9\n10");
+    assert.equal(extractTailingContent(files['tenLines.txt'],5,"1"),"6\n7\n8\n9\n10");
   });
   it('should return 3 characters from tail',function(){
-    assert.equal(extractTailingContent(generateLines(10),3),"8\n9\n10");
+    assert.equal(extractTailingContent(files['tenLines.txt'],3),"8\n9\n10");
   });
 });

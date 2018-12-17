@@ -1,4 +1,4 @@
-const extractUsefulContent = function (content, value, type = "1") { // value -> n / c <== n=1 & c=0
+const extractUsefulContent = function (content, value, type = "1") { // type -> n / c <== n=1 & c=0
   if (type == "1") {
     return getLines(content, value);
   }
@@ -95,8 +95,11 @@ const checkErrors = function(userInput,command,type,fileName) {
     return checkValueErrors(fileName, type, userInput, command)
   }
 }
-const head = function (userInput, fs, command = "head") {
-  // head command
+
+const fileNotExistsError = function(command,fileName) {
+  return command + ": " + fileName + ": No such file or directory";
+}
+const processContents = function (userInput, fs, command) {
   let data = [];
   let delimiter = "";
   let text = "";
@@ -105,7 +108,8 @@ const head = function (userInput, fs, command = "head") {
   if(errors) { return errors; }
   for (let count = 0; count < file.length; count++) {
     if (!fs.existsSync(file[count])) {
-      data.push(command + ": " + file[count] + ": No such file or directory");
+       data.push(fileNotExistsError(command,file[count]));
+  //    data.push(command + ": " + file[count] + ": No such file or directory");
       count++;
     }
     if (count == file.length) {
@@ -116,6 +120,7 @@ const head = function (userInput, fs, command = "head") {
       delimiter = "\n";
     }
     text = fs.readFileSync(file[count], "utf8");
+    
     if (command == "head")
       data.push(extractUsefulContent(text, extractNumber, type));
     if (command == "tail")
@@ -123,7 +128,6 @@ const head = function (userInput, fs, command = "head") {
   }
   return data.join("\n");
 };
-
 const checkValueErrors = function (fileName, type, userInput, command) {
   let value = extractNumber(getOptionAndNumber(userInput));
   let invalidValue = value <= 0;
@@ -140,8 +144,12 @@ const checkValueErrors = function (fileName, type, userInput, command) {
 };
 const tail = function (userInput, fs) {
   // tail command
-  return head(userInput, fs, "tail");
+  return processContents(userInput, fs, "tail");
 };
+const head = function(userInput,fs) {
+  // head command
+  return processContents(userInput,fs,'head');
+}
 const extractTailingContent = function (content, limit, option = "1") { // option -> n,c <== n=1 & c=0
   if (option == "1") {
     return getTailingLines(content, limit);
