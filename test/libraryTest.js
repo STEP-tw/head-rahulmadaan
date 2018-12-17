@@ -9,7 +9,7 @@ let { makeHeader,
   getTailingCharacters,
   tail,
   extractTailingContent,
-  extractUsefulContent
+  runCommand
 } = require('../src/library.js');
 let assert = require('assert');
 
@@ -33,7 +33,7 @@ describe('extractNumber', function () {
 
   it('should return the integer from input', function () {
     assert.equal(extractNumber(['-n1']), 1);
-    assert.equal(extractNumber(['./head.js', '-c5']), 5);
+    assert.equal(extractNumber(['-c5']), 5);
   });
 
   it('should return 0 when input have no integer and type is c', function () {
@@ -334,15 +334,15 @@ describe('tail',function(){
     assert.equal(tail(['fiveLines.txt','missing.txt'],fs,'tail'),expected_output);
   });
 });
-describe('extractUsefulContent',function(){
+describe('runCommand',function(){
   it('get 5 head lines',function(){
-    assert.equal(extractUsefulContent(files['tenLines.txt'],5,'1'),files['fiveLines.txt']);
+    assert.equal(runCommand(files['tenLines.txt'],5,'1'),files['fiveLines.txt']);
   });
   it('should return 10 lines from head, if number of lines is not specified',function(){
-    assert.equal(extractUsefulContent(files['tenLines.txt'],5),files['fiveLines.txt']);
+    assert.equal(runCommand(files['tenLines.txt'],5),files['fiveLines.txt']);
   });
   it('get 5 head characters',function(){
-    assert.equal(extractUsefulContent(files['tenLines.txt'],5,'0'),'1\n2\n3');
+    assert.equal(runCommand(files['tenLines.txt'],5,'0'),'1\n2\n3');
   });
 });
 describe('extractTailingContent',function(){
