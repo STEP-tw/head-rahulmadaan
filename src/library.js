@@ -4,15 +4,15 @@ const runCommand = function (content, limit, option = "1") { // type -> n / c <=
   }
   return getCharacters(content, limit);
 };
-const getHeadContents = function(content,value,splitter,joiner) {
-  return content.split(splitter).slice(0,value).join(joiner);
+const getHeadContents = function (content, value, splitter, joiner) {
+  return content.split(splitter).slice(0, value).join(joiner);
 }
 const getLines = function (content, value = 10) { // get specified lines from a file
-  return getHeadContents(content,value,'\n','\n');
+  return getHeadContents(content, value, '\n', '\n');
 };
 
 const getCharacters = function (content, value = 0) { // get specified characters from a file
-  return getHeadContents(content,value,'','');
+  return getHeadContents(content, value, '', '');
 };
 
 const makeHeader = function (title) {
@@ -20,12 +20,12 @@ const makeHeader = function (title) {
 };
 const extractNumber = function (userInput) {
   let input = userInput.join("");
-  let possibleErrorOne = input.includes("-c") && !input.match(/[0-9]/);
-  let possibleErrorTwo = input.match(/[0]/) && !input.match(/[1-9]/);
-  if (eval(possibleErrorOne) || eval(possibleErrorTwo)) {
+  if (input.includes("-c") && !input.match(/[0-9]/)) {
     return 0;
   };
-
+  if (input.match(/[0]/) && !input.match(/[1-9]/)) {
+    return 0;
+  };
   let index = 0;
   let slicedInput = input;
   while (!parseInt(slicedInput) && index < input.length) {
@@ -42,10 +42,11 @@ const extractNumber = function (userInput) {
 const getFileNames = userInput =>
   userInput.filter(file => file.includes(".") || file.includes("_"));   // returns file names from user input
 
-const getOptionAndNumber = userInput => 
+const getOptionAndNumber = userInput =>
   userInput.filter(argv => !argv.includes(".")); // returns option and number from user input
 
-const findWronglVal = function (options) {
+const findIllegalValue = function (inputOptions) {
+  let options = inputOptions;
   let list = "abdefghijklmopqrstuvwxyz";
   list = list.split("");
   options = options.join("");
@@ -56,12 +57,13 @@ const findWronglVal = function (options) {
   return value;
 };
 
-const extractType = function (input) { // extract option from user input
-  input = input.join("");
+const extractType = function (userInput) { // extract option from user input
+  let input = userInput.join("");
   if (input.includes("-c")) {
     return '0';
   }
   return '1';
+  
 };
 const classifyInput = function (userInput) { // for classification of input
   let file = getFileNames(userInput);
@@ -72,7 +74,7 @@ const classifyInput = function (userInput) { // for classification of input
   return { file, number, type };
 };
 const checkIllegalCountErrors = function (userInput, command, type) {
-  let wrongValue = findWronglVal(getOptionAndNumber(userInput));
+  let wrongValue = findIllegalValue(getOptionAndNumber(userInput));
   if (wrongValue && type == "1" && command == 'head') {
     return command + ": illegal line count -- " + wrongValue;
   }
@@ -123,10 +125,10 @@ const processContents = function (userInput, command, fs) {
       data.push(extractTailingContent(text, number, type));
   }
   return data.join("\n");
-}; 
+};
 const checkValueErrors = function (type, userInput, command) {
   let value = extractNumber(getOptionAndNumber(userInput));
- 
+
   if (value <= 0 && type == "1" && command == 'head') {
     return command + ": illegal line count -- " + value;
   }
@@ -151,15 +153,15 @@ const extractTailingContent = function (content, limit, option = "1") { // optio
   }
   return getTailingCharacters(content, limit);
 };
-const getTailingContents = function(content,value,splitter,joiner) {
-  return content.split(splitter).reverse().slice(0,value).reverse().join(joiner);
+const getTailingContents = function (content, value, splitter, joiner) {
+  return content.split(splitter).reverse().slice(0, value).reverse().join(joiner);
 }
 const getTailingLines = function (content, limit = 10) { // get lines from tail of file
-  return getTailingContents(content,limit,'\n','\n'); 
+  return getTailingContents(content, limit, '\n', '\n');
 };
 
 const getTailingCharacters = function (content, limit = 0) { // get characters from tail of file
-  return getTailingContents(content,limit,'','');
+  return getTailingContents(content, limit, '', '');
 };
 
 module.exports = {
