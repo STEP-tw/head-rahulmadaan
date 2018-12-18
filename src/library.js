@@ -40,11 +40,11 @@ const extractNumber = function (userInput) {
 };
 
 const getFileNames = userInput =>
-  userInput.filter(file => file.includes(".") || file.includes("_"));   // returns file names from user input
+  userInput.filter(file => file.includes(".") || file.includes("_")); 
+
 
 const getOptionAndNumber = userInput =>
-  userInput.filter(argv => !argv.includes(".")); // returns option and number from user input
-
+  userInput.filter(argv => !argv.includes(".")); 
 const findIllegalValue = function (inputOptions) {
   let options = inputOptions;
   let list = "abdefghijklmopqrstuvwxyz";
