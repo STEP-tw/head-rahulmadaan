@@ -40,11 +40,11 @@ const extractNumber = function (userInput) {
 };
 
 const getFileNames = userInput =>
-  userInput.filter(file => file.includes(".") || file.includes("_")); 
+  userInput.filter(file => file.includes(".") || file.includes("_"));
 
 
 const getOptionAndNumber = userInput =>
-  userInput.filter(argv => !argv.includes(".")); 
+  userInput.filter(argv => !argv.includes("."));
 const findIllegalValue = function (inputOptions) {
   let options = inputOptions;
   let list = "abdefghijklmopqrstuvwxyz";
@@ -63,7 +63,7 @@ const extractType = function (userInput) { // extract option from user input
     return '0';
   }
   return '1';
-  
+
 };
 const classifyInput = function (userInput) { // for classification of input
   let file = getFileNames(userInput);
@@ -97,6 +97,12 @@ const checkErrors = function (userInput, command, type) {
 const fileNotExistsError = function (command, fileName) {
   return command + ": " + fileName + ": No such file or directory";
 }
+const isFileExists = function (fileName, fs) {
+  return fs.existsSync(fileName);
+}
+const readFile = function (fileName, fs) {
+  return fs.readFileSync(fileName, 'utf8')
+}
 const processContents = function (userInput, command, fs) {
 
   let data = [];
@@ -106,7 +112,7 @@ const processContents = function (userInput, command, fs) {
   let errors = checkErrors(userInput, command, type, file);
   if (errors) { return errors; }
   for (let count = 0; count < file.length; count++) {
-    if (!fs.existsSync(file[count])) {
+    if (!isFileExists(file[count], fs)) {
       data.push(fileNotExistsError(command, file[count]));
       count++;
     }
@@ -117,8 +123,7 @@ const processContents = function (userInput, command, fs) {
       data.push(delimiter + makeHeader(file[count]));
       delimiter = "\n";
     }
-    text = fs.readFileSync(file[count], "utf8");
-
+    text = readFile(file[count], fs);
     if (command == "head")
       data.push(runCommand(text, number, type));
     if (command == "tail")
