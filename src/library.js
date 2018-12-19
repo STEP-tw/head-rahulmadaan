@@ -45,6 +45,7 @@ const getFileNames = userInput =>
 
 const getOptionAndNumber = userInput =>
   userInput.filter(argv => !argv.includes("."));
+
 const findIllegalValue = function (inputOptions) {
   let options = inputOptions;
   let list = "abdefghijklmopqrstuvwxyz";
@@ -57,7 +58,7 @@ const findIllegalValue = function (inputOptions) {
   return value;
 };
 
-const extractType = function (userInput) { 
+const extractType = function (userInput) {
   let input = userInput.join("");
   if (input.includes("-c")) {
     return '0';
@@ -65,7 +66,7 @@ const extractType = function (userInput) {
   return '1';
 
 };
-const classifyInput = function (userInput) { 
+const classifyInput = function (userInput) {
   let file = getFileNames(userInput);
   let optionAndNumber = getOptionAndNumber(userInput);
   let number = extractNumber(optionAndNumber) || 10;
@@ -133,23 +134,33 @@ const processContents = function (userInput, command, fs) {
 };
 const checkValueErrors = function (type, userInput, command) {
   let value = extractNumber(getOptionAndNumber(userInput));
+   let functionRef = {
+     "head" : isheadIllegalCount,
+     "tail" : isTailIllegalCount
+   }
+   if(functionRef[command](value)) {
+    return illegalCountMessages(command, value, type); 
+   } 
 
-   if(isheadIllegalCount(value,command)){
-    return headIllegalCountMessages(value,type);
-  }
-  if (command == 'tail' && value == 0) {
-    return ' ';
-  }
 };
-const isheadIllegalCount = function(value,command) {
-  return value<=0 && command == 'head';
+const isheadIllegalCount = function (value) {
+  return value <= 0;
 }
-const headIllegalCountMessages = function(value,type) {
+const illegalCountMessages = function (command, value, type) {
   let message = {
-    "1" : "head: illegal line count -- " + value,
-    "0" : "head: illegal byte count -- " + value
-  };
-  return message[type];
+    "head": {
+      "1": "head: illegal line count -- " + value,
+      "0": "head: illegal byte count -- " + value
+    },
+    "tail": {
+      "1": " ",
+      "0": " "
+    }
+  }
+  return message[command][type];
+}
+const isTailIllegalCount = function (value) {
+  return value == 0;
 }
 const tail = function (userInput, fs) {
   return processContents(userInput, "tail", fs);
