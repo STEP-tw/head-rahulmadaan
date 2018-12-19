@@ -140,7 +140,7 @@ fs.existsSync = function (path) {
 describe("head", () => {
   describe('empty file as input', function () {
     it('should return no content if empty file is given in input', function () {
-      assert.equal(head([""], fs), '');
+      assert.equal(head([""], fs), 'head: : No such file or directory');
     });
   });
   describe('for 10 lines as output', function () {
@@ -159,9 +159,6 @@ describe("head", () => {
     it("should return 5 lines if only value is given with a '-'", function () {
       assert.equal(head(['--', 'fifteenLines.txt'], fs), files["tenLines.txt"]);
     });
-  });
-  it('should return empty line for no input',function(){
-    assert.equal(head([''],fs),'');
   });
 });
 describe('head (for two files)', function () {
