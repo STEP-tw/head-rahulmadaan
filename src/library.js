@@ -1,3 +1,8 @@
+const { checkErrors,
+  fileNotExistsError,
+  findIllegalValue
+} = require('./error.js');
+
 const runCommand = function (content, limit, option = "1") { // type -> n / c <== n=1 & c=0
   if (option == "1") {
     return getLines(content, limit);
@@ -46,26 +51,14 @@ const getFileNames = userInput =>
 const getOptionAndNumber = userInput =>
   userInput.filter(argv => !argv.includes("."));
 
-const findIllegalValue = function (inputOptions) {
-  let options = inputOptions;
-  let list = "abdefghijklmopqrstuvwxyz";
-  list = list.split("");
-  options = options.join("");
-  let value = "";
-  if (list.some(x => options.includes(x))) {
-    value = options.slice(2);
-  }
-  return value;
-};
-
 const extractType = function (userInput) {
   let input = userInput.join("");
   if (input.includes("-c")) {
     return '0';
   }
   return '1';
-
 };
+
 const classifyInput = function (userInput) {
   let file = getFileNames(userInput);
   let optionAndNumber = getOptionAndNumber(userInput);
@@ -75,41 +68,7 @@ const classifyInput = function (userInput) {
   return { file, number, type };
 };
 
-const illegalCountErrors = function(command,type,wrongValue) {
-  let functionRef = { 
-    "head" : headIllegalCountMessage,
-    "tail" : tailIllegalCountMessage
-  }
-  return functionRef[command](type,wrongValue);
-};
-const headIllegalCountMessage = function(type,value) {
-  let messages = {
-    "1" : "head: illegal line count -- " + value,
-    "0" : "head: illegal byte count -- " + value
-  }
-  return messages[type];
-};
-const tailIllegalCountMessage = function(type,value) {
-  let messages = {
-    "1" : "tail: illegal offset -- " + value,
-    "0" : "tail: illegal offset -- " + value
-  }
-  return messages[type];
-}
-const checkErrors = function (userInput, command, type) {
-  let value = extractNumber(getOptionAndNumber(userInput));
-  let wrongValue = findIllegalValue(getOptionAndNumber(userInput));
-  if (wrongValue) {
-    return illegalCountErrors(command,type,wrongValue);
-  }
-  if(checkValueErrors(value,command)) {
-    return invalidCountMessages(command, value, type); 
-  }
-}
 
-const fileNotExistsError = function (command, fileName) {
-  return command + ": " + fileName + ": No such file or directory";
-}
 const isFileExists = function (fileName, fs) {
   return fs.existsSync(fileName);
 }
@@ -120,9 +79,10 @@ const processContents = function (userInput, command, fs) {
 
   let data = [];
   let delimiter = "";
-  let text = "";
   let { file, number, type } = classifyInput(userInput);
-  let errors = checkErrors(userInput, command, type, file);
+  let value = extractNumber(getOptionAndNumber(userInput));
+  let wrongValue = findIllegalValue(getOptionAndNumber(userInput));
+  let errors = checkErrors(value,wrongValue,type,command);
   if (errors) { return errors; }
   for (let count = 0; count < file.length; count++) {
     if (!isFileExists(file[count], fs)) {
@@ -136,7 +96,7 @@ const processContents = function (userInput, command, fs) {
       data.push(delimiter + makeHeader(file[count]));
       delimiter = "\n";
     }
-    text = readFile(file[count], fs);
+    let text = readFile(file[count], fs);
     if (command == "head")
       data.push(runCommand(text, number, type));
     if (command == "tail")
@@ -144,35 +104,7 @@ const processContents = function (userInput, command, fs) {
   }
   return data.join("\n");
 };
-const checkValueErrors = function (value, command) {
-   let functionRef = {
-     "head" : isheadValidCount,
-     "tail" : isTailValidCount
-   }
-   if(functionRef[command](value)) {
-    return true
-   } 
-   return false;
-};
-const isheadValidCount = function (value) {
-  return value <= 0;
-}
-const invalidCountMessages = function (command, value, type) {
-  let message = {
-    "head": {
-      "1": "head: illegal line count -- " + value,
-      "0": "head: illegal byte count -- " + value
-    },
-    "tail": {
-      "1": " ",
-      "0": " "
-    }
-  }
-  return message[command][type];
-}
-const isTailValidCount = function (value) {
-  return value == 0;
-}
+
 const tail = function (userInput, fs) {
   return processContents(userInput, "tail", fs);
 };
