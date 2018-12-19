@@ -75,20 +75,27 @@ const classifyInput = function (userInput) {
   return { file, number, type };
 };
 
-
 const illegalCountErrors = function(command,type,wrongValue) {
-  let messages = {
-    "head" : {
-      "1" : "head: illegal line count -- " + wrongValue,
-      "0" : "head: illegal byte count -- " + wrongValue
-    },
-    "tail" : {
-      "1" : "tail: illegal offset -- " + wrongValue,
-      "0" : "tail: illegal offset -- " + wrongValue
-    }
+  let functionRef = { 
+    "head" : headIllegalCountMessage,
+    "tail" : tailIllegalCountMessage
   }
-  return messages[command][type];
+  return functionRef[command](type,wrongValue);
 };
+const headIllegalCountMessage = function(type,value) {
+  let messages = {
+    "1" : "head: illegal line count -- " + value,
+    "0" : "head: illegal byte count -- " + value
+  }
+  return messages[type];
+};
+const tailIllegalCountMessage = function(type,value) {
+  let messages = {
+    "1" : "tail: illegal offset -- " + value,
+    "0" : "tail: illegal offset -- " + value
+  }
+  return messages[type];
+}
 const checkErrors = function (userInput, command, type) {
   let value = extractNumber(getOptionAndNumber(userInput));
   let wrongValue = findIllegalValue(getOptionAndNumber(userInput));
