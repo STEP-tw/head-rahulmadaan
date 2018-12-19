@@ -37,14 +37,23 @@ const fileNotExistsError = function (command, fileName) {
 }
 
 const findIllegalValue = function (inputOptions) {
-    let options = inputOptions;
+    let options = inputOptions.join("");
+    // console.log(options);
     let list = "abdefghijklmopqrstuvwxyz";
     list = list.split("");
-    options = options.join("");
     let value = "";
+    // console.log('phase 1');
     if (list.some(x => options.includes(x))) {
-        value = options.slice(2);
+        if (options.includes('-n') || options.includes('-c')) {
+            value = options.slice(2);
+            // console.log('phase 1');
+        }
+        if (!options.includes('-n') && !options.includes('-c')) {
+            value = options.slice(1);
+   //         console.log('phase 2');
+        }
     }
+    // console.log('phase 4');
     return value;
 };
 const checkValueErrors = function (value, command) {
