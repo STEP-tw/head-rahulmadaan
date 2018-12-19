@@ -22,8 +22,6 @@ const tailIllegalCountMessage = function (type, value) {
     return messages[type];
 }
 const checkErrors = function (value, wrongValue, type, command) {
-    //   let value = extractNumber(getOptionAndNumber(userInput));
-    //   let wrongValue = findIllegalValue(getOptionAndNumber(userInput));
     if (wrongValue) {
         return illegalCountErrors(command, type, wrongValue);
     }
@@ -38,22 +36,17 @@ const fileNotExistsError = function (command, fileName) {
 
 const findIllegalValue = function (inputOptions) {
     let options = inputOptions.join("");
-    // console.log(options);
     let list = "abdefghijklmopqrstuvwxyz";
     list = list.split("");
     let value = "";
-    // console.log('phase 1');
     if (list.some(x => options.includes(x))) {
         if (options.includes('-n') || options.includes('-c')) {
             value = options.slice(2);
-            // console.log('phase 1');
         }
         if (!options.includes('-n') && !options.includes('-c')) {
             value = options.slice(1);
-   //         console.log('phase 2');
         }
     }
-    // console.log('phase 4');
     return value;
 };
 const checkValueErrors = function (value, command) {
