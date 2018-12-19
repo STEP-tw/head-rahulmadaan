@@ -3,7 +3,7 @@ const { checkErrors,
   findIllegalValue
 } = require('./error.js');
 
-const runCommand = function (content, limit, option = "1") { // type -> n / c <== n=1 & c=0
+const runCommand = function (content, limit, option = "1") { // option -> n / c <== n=1 & c=0
   if (option == "1") {
     return getLines(content, limit);
   }
@@ -82,7 +82,7 @@ const processContents = function (userInput, command, fs) {
   let { file, number, type } = classifyInput(userInput);
   let value = extractNumber(getOptionAndNumber(userInput));
   let wrongValue = findIllegalValue(getOptionAndNumber(userInput));
-  let errors = checkErrors(value,wrongValue,type,command);
+  let errors = checkErrors(value, wrongValue, type, command);
   if (errors) { return errors; }
   for (let count = 0; count < file.length; count++) {
     if (!isFileExists(file[count], fs)) {
@@ -97,13 +97,19 @@ const processContents = function (userInput, command, fs) {
       delimiter = "\n";
     }
     let text = readFile(file[count], fs);
-    if (command == "head")
-      data.push(runCommand(text, number, type));
-    if (command == "tail")
-      data.push(extractTailingContent(text, number, type));
+    data.push(getContents(command, text, number, type))
   }
   return data.join("\n");
 };
+
+const getContents = function (command, text, number, option) {
+  let commands = {
+    "head": runCommand,
+    "tail": extractTailingContent
+  };
+  return commands[command](text, number, option);
+  // content limit option
+}
 
 const tail = function (userInput, fs) {
   return processContents(userInput, "tail", fs);
