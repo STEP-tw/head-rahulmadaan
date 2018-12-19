@@ -57,7 +57,7 @@ const findIllegalValue = function (inputOptions) {
   return value;
 };
 
-const extractType = function (userInput) { // extract option from user input
+const extractType = function (userInput) { 
   let input = userInput.join("");
   if (input.includes("-c")) {
     return '0';
@@ -65,7 +65,7 @@ const extractType = function (userInput) { // extract option from user input
   return '1';
 
 };
-const classifyInput = function (userInput) { // for classification of input
+const classifyInput = function (userInput) { 
   let file = getFileNames(userInput);
   let optionAndNumber = getOptionAndNumber(userInput);
   let number = extractNumber(optionAndNumber) || 10;
@@ -152,11 +152,9 @@ const headIllegalCountMessages = function(value,type) {
   return message[type];
 }
 const tail = function (userInput, fs) {
-  // tail command
   return processContents(userInput, "tail", fs);
 };
 const head = function (userInput, fs) {
-  // head command
   return processContents(userInput, 'head', fs);
 }
 const extractTailingContent = function (content, limit, option = "1") { // option -> n,c <== n=1 & c=0
