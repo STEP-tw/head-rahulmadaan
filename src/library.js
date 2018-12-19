@@ -87,11 +87,12 @@ const checkIllegalCountErrors = function (userInput, command, type) {
   }
 };
 const checkErrors = function (userInput, command, type) {
+  let value = extractNumber(getOptionAndNumber(userInput));
   if (checkIllegalCountErrors(userInput, command, type)) {
     return checkIllegalCountErrors(userInput, command, type)
   }
-  if (checkValueErrors(type, userInput, command)) {
-    return checkValueErrors(type, userInput, command)
+  if(checkValueErrors(value,command)) {
+    return illegalCountMessages(command, value, type); 
   }
 }
 
@@ -132,16 +133,15 @@ const processContents = function (userInput, command, fs) {
   }
   return data.join("\n");
 };
-const checkValueErrors = function (type, userInput, command) {
-  let value = extractNumber(getOptionAndNumber(userInput));
+const checkValueErrors = function (value, command) {
    let functionRef = {
      "head" : isheadIllegalCount,
      "tail" : isTailIllegalCount
    }
    if(functionRef[command](value)) {
-    return illegalCountMessages(command, value, type); 
+    return true
    } 
-
+   return false;
 };
 const isheadIllegalCount = function (value) {
   return value <= 0;
