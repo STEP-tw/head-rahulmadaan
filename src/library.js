@@ -74,6 +74,7 @@ const classifyInput = function (userInput) {
 
   return { file, number, type };
 };
+
 const checkIllegalCountErrors = function (userInput, command, type) {
   let wrongValue = findIllegalValue(getOptionAndNumber(userInput));
   if (wrongValue && type == "1" && command == 'head') {
@@ -92,7 +93,7 @@ const checkErrors = function (userInput, command, type) {
     return checkIllegalCountErrors(userInput, command, type)
   }
   if(checkValueErrors(value,command)) {
-    return illegalCountMessages(command, value, type); 
+    return invalidCountMessages(command, value, type); 
   }
 }
 
@@ -135,18 +136,18 @@ const processContents = function (userInput, command, fs) {
 };
 const checkValueErrors = function (value, command) {
    let functionRef = {
-     "head" : isheadIllegalCount,
-     "tail" : isTailIllegalCount
+     "head" : isheadValidCount,
+     "tail" : isTailValidCount
    }
    if(functionRef[command](value)) {
     return true
    } 
    return false;
 };
-const isheadIllegalCount = function (value) {
+const isheadValidCount = function (value) {
   return value <= 0;
 }
-const illegalCountMessages = function (command, value, type) {
+const invalidCountMessages = function (command, value, type) {
   let message = {
     "head": {
       "1": "head: illegal line count -- " + value,
@@ -159,7 +160,7 @@ const illegalCountMessages = function (command, value, type) {
   }
   return message[command][type];
 }
-const isTailIllegalCount = function (value) {
+const isTailValidCount = function (value) {
   return value == 0;
 }
 const tail = function (userInput, fs) {
