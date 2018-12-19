@@ -3,6 +3,8 @@ const { checkErrors,
   findIllegalValue
 } = require('./error.js');
 
+const {makeHeader,extractNumber,getFileNames,getOptionAndNumber,extractType} = require('./parseInput.js');
+
 const runCommand = function (content, limit, option = "1") {
   if (option == "1") {
     return getLines(content, limit);
@@ -19,46 +21,6 @@ const getLines = function (content, value = 10) {
 const getCharacters = function (content, value = 0) {
   return getHeadContents(content, value, '', '');
 };
-
-const makeHeader = function (title) {
-  return "==> " + title + " <==";
-};
-const extractNumber = function (userInput) {
-  let input = userInput.join("");
-  if (input.includes("-c") && !input.match(/[0-9]/)) {
-    return 0;
-  };
-  if (input.match(/[0]/) && !input.match(/[1-9]/)) {
-    return 0;
-  };
-  let index = 0;
-  let slicedInput = input;
-  while (!parseInt(slicedInput) && index < input.length) {
-    index++;
-    slicedInput = input.slice(index);
-  }
-  if (!userInput.includes("-c") && !userInput.includes("-n")) {
-    return Math.abs(parseInt(slicedInput));
-  }
-
-  return parseInt(slicedInput);
-};
-
-const getFileNames = userInput =>
-  userInput.filter(file => file.includes(".") || file.includes("_"));
-
-
-const getOptionAndNumber = userInput =>
-  userInput.filter(argv => !argv.includes("."));
-
-const extractType = function (userInput) {
-  let input = userInput.join("");
-  if (input.includes("-c")) {
-    return '0';
-  }
-  return '1';
-};
-
 const classifyInput = function (userInput) {
   let file = getFileNames(userInput);
   let optionAndNumber = getOptionAndNumber(userInput);
@@ -67,7 +29,6 @@ const classifyInput = function (userInput) {
 
   return { file, number, type };
 };
-
 
 const isFileExists = function (fileName, fs) {
   return fs.existsSync(fileName);
