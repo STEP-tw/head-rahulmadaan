@@ -5,8 +5,8 @@ let { makeHeader,
   extractNumber,
   getLines,
   getCharacters,
-  getTailingLines,
-  getTailingCharacters,
+  getNTailingLines,
+  getNTailingCharacters,
   tail,
   extractTailingContent,
   runCommand
@@ -116,12 +116,6 @@ const generateContent = function (length) {
 const generateLines = function (numberOfLines) {
   return generateContent(numberOfLines).join('\n');
 }
-const generateChars = function (numberOfChars) {
-  return generateContent(numberOfChars).join('');
-}
-const createHeader = function (head) {
-  return "==> " + head + " <==";
-}
 const fs = {};
 files = {
   "fiveLines.txt": generateLines(5),
@@ -178,26 +172,26 @@ describe('head (for two files)', function () {
     assert.deepEqual(head(["fiveLines.txt", "fifteenLines.txt"], fs), expectedOut);
   });
 });
-describe('getTailingLines', function () {
+describe('getNTailingLines', function () {
   it('should return given number of tailing lines from the text', function () {
-    assert.deepEqual(getTailingLines(files['tenLines.txt'], 2), '9\n10');
-    assert.deepEqual(getTailingLines(files['tenLines.txt'], 1), '10');
-    assert.deepEqual(getTailingLines(files['tenLines.txt'], 6), '5\n6\n7\n8\n9\n10');
+    assert.deepEqual(getNTailingLines(files['tenLines.txt'], 2), '9\n10');
+    assert.deepEqual(getNTailingLines(files['tenLines.txt'], 1), '10');
+    assert.deepEqual(getNTailingLines(files['tenLines.txt'], 6), '5\n6\n7\n8\n9\n10');
   });
   it('shoudld return 10 lines if number of lines is not given',function(){
-    assert.deepEqual(getTailingLines(files['tenLines.txt']),files['tenLines.txt']);
+    assert.deepEqual(getNTailingLines(files['tenLines.txt']),files['tenLines.txt']);
   });
 })
-describe('getTailingCharacters', function () {
+describe('getNTailingCharacters', function () {
   let text = 'jd djf \n kfd fdhj';
   it('should return given number of tailing characters from the text', function () {
-    assert.deepEqual(getTailingCharacters(text, 2), 'hj');
-    assert.deepEqual(getTailingCharacters(text, 5), ' fdhj');
-    assert.deepEqual(getTailingCharacters(text, 8), 'kfd fdhj');
-    assert.deepEqual(getTailingCharacters(text, 20), text);
+    assert.deepEqual(getNTailingCharacters(text, 2), 'hj');
+    assert.deepEqual(getNTailingCharacters(text, 5), ' fdhj');
+    assert.deepEqual(getNTailingCharacters(text, 8), 'kfd fdhj');
+    assert.deepEqual(getNTailingCharacters(text, 20), text);
   });
   it('should return 0 characters, if number of character is not specified',function(){
-    assert.deepEqual(getTailingCharacters(text), '');
+    assert.deepEqual(getNTailingCharacters(text), '');
   });
 });
 describe('head -- illegal line count', function () {
