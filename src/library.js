@@ -3,7 +3,7 @@ const { checkErrors,
   findIllegalValue
 } = require('./error.js');
 
-const runCommand = function (content, limit, option = "1") { // option -> n / c <== n=1 & c=0
+const runCommand = function (content, limit, option = "1") {
   if (option == "1") {
     return getLines(content, limit);
   }
@@ -12,11 +12,11 @@ const runCommand = function (content, limit, option = "1") { // option -> n / c 
 const getHeadContents = function (content, value, splitter, joiner) {
   return content.split(splitter).slice(0, value).join(joiner);
 }
-const getLines = function (content, value = 10) { // get specified lines from a file
+const getLines = function (content, value = 10) { 
   return getHeadContents(content, value, '\n', '\n');
 };
 
-const getCharacters = function (content, value = 0) { // get specified characters from a file
+const getCharacters = function (content, value = 0) { 
   return getHeadContents(content, value, '', '');
 };
 
@@ -108,7 +108,6 @@ const getContents = function (command, text, number, option) {
     "tail": extractTailingContent
   };
   return commands[command](text, number, option);
-  // content limit option
 }
 
 const tail = function (userInput, fs) {
@@ -126,11 +125,11 @@ const extractTailingContent = function (content, limit, option = "1") { // optio
 const getTailingContents = function (content, value, splitter, joiner) {
   return content.split(splitter).reverse().slice(0, value).reverse().join(joiner);
 }
-const getTailingLines = function (content, limit = 10) { // get lines from tail of file
+const getTailingLines = function (content, limit = 10) { 
   return getTailingContents(content, limit, '\n', '\n');
 };
 
-const getTailingCharacters = function (content, limit = 0) { // get characters from tail of file
+const getTailingCharacters = function (content, limit = 0) { 
   return getTailingContents(content, limit, '', '');
 };
 
