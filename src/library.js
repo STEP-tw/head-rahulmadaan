@@ -12,11 +12,11 @@ const runCommand = function (content, limit, option = "1") {
 const getHeadContents = function (content, value, splitter, joiner) {
   return content.split(splitter).slice(0, value).join(joiner);
 }
-const getLines = function (content, value = 10) { 
+const getLines = function (content, value = 10) {
   return getHeadContents(content, value, '\n', '\n');
 };
 
-const getCharacters = function (content, value = 0) { 
+const getCharacters = function (content, value = 0) {
   return getHeadContents(content, value, '', '');
 };
 
@@ -118,18 +118,18 @@ const head = function (userInput, fs) {
 }
 const extractTailingContent = function (content, limit, option = "1") { // option -> n,c <== n=1 & c=0
   if (option == "1") {
-    return getTailingLines(content, limit);
+    return getNTailingLines(content, limit);
   }
-  return getTailingCharacters(content, limit);
+  return getNTailingCharacters(content, limit);
 };
 const getTailingContents = function (content, value, splitter, joiner) {
   return content.split(splitter).reverse().slice(0, value).reverse().join(joiner);
 }
-const getTailingLines = function (content, limit = 10) { 
+const getNTailingLines = function (content, limit = 10) {
   return getTailingContents(content, limit, '\n', '\n');
 };
 
-const getTailingCharacters = function (content, limit = 0) { 
+const getNTailingCharacters = function (content, limit = 0) {
   return getTailingContents(content, limit, '', '');
 };
 
@@ -144,7 +144,7 @@ module.exports = {
   getFileNames,
   getOptionAndNumber,
   tail,
-  getTailingCharacters,
-  getTailingLines,
+  getNTailingCharacters,
+  getNTailingLines,
   extractTailingContent
 };
