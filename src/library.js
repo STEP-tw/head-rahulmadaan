@@ -134,16 +134,23 @@ const processContents = function (userInput, command, fs) {
 const checkValueErrors = function (type, userInput, command) {
   let value = extractNumber(getOptionAndNumber(userInput));
 
-  if (value <= 0 && type == "1" && command == 'head') {
-    return command + ": illegal line count -- " + value;
-  }
-  if (value <= 0 && type == "0" && command == 'head') {
-    return command + ": illegal byte count -- " + value;
+   if(isheadIllegalCount(value,command)){
+    return headIllegalCountMessages(value,type);
   }
   if (command == 'tail' && value == 0) {
     return ' ';
   }
 };
+const isheadIllegalCount = function(value,command) {
+  return value<=0 && command == 'head';
+}
+const headIllegalCountMessages = function(value,type) {
+  let message = {
+    "1" : "head: illegal line count -- " + value,
+    "0" : "head: illegal byte count -- " + value
+  };
+  return message[type];
+}
 const tail = function (userInput, fs) {
   // tail command
   return processContents(userInput, "tail", fs);
