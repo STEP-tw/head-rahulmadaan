@@ -3,7 +3,7 @@ const { checkErrors,
   findIllegalValue
 } = require('./error.js');
 
-const {makeHeader,extractNumber,getFileNames,getOptionAndNumber,extractType} = require('./parseInput.js');
+const {makeHeader,extractNumber,classifyInput,getFileNames,getOptionAndNumber,extractType} = require('./parseInput.js');
 
 const runCommand = function (content, limit, option = "1") {
   if (option == "1") {
@@ -20,14 +20,6 @@ const getLines = function (content, value = 10) {
 
 const getCharacters = function (content, value = 0) {
   return getHeadContents(content, value, '', '');
-};
-const classifyInput = function (userInput) {
-  let file = getFileNames(userInput);
-  let optionAndNumber = getOptionAndNumber(userInput);
-  let number = extractNumber(optionAndNumber) || 10;
-  let type = extractType(optionAndNumber);
-
-  return { file, number, type };
 };
 
 const isFileExists = function (fileName, fs) {
