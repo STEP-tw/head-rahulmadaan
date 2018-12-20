@@ -216,6 +216,10 @@ describe('head -- illegal line count', function () {
     let expected_output = "head: illegal line count -- a";
     assert.deepEqual(head(['-na', 'fiveLines.txt'], fs), expected_output);
   });
+  it('should give illegal line count error', function () {
+    let expected_output = "head: illegal line count -- a3";
+    assert.deepEqual(head(['-a3', 'fiveLines.txt'], fs), expected_output);
+  });
 });
 describe(' head "c" ', function () {
 
