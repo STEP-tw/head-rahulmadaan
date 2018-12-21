@@ -2,7 +2,6 @@ const { checkErrors,
   fileNotExistsError,
   findIllegalValue
 } = require('./error.js');
-
 const {makeHeader,extractNumber,classifyInput,getFileNames,getOptionAndNumber,extractType} = require('./parseInput.js');
 
 const runCommand = function (content, limit, option = "1") {
